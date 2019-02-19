@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ code | default("400")}}
+{% endblock %}
+
+{% block main %}
+<h1>ERROR {{ code | default("400") }} PAGE NOT FOUND:</h1>
+<h2>{{ message }}</h2>
+{% endblock %}
