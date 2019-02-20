@@ -18,8 +18,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-    <title>Patrick's:{% block title %}{% endblock %}</title>
-
+    <title>Patrick's:{% block title %}Website{% endblock %}</title>
+    {% block head %}{% endblock %}
 
   </head>
 
@@ -51,8 +51,8 @@
         </div>
     </nav>
 
-    <main>
-      {% block main %}{% endblock %}
+    <main class="container p-5">
+        {% block main %}{% endblock %}
     </main>
     <footer class="small text-center text-muted">
       This is a website. Treat it as such.
