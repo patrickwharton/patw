@@ -1,5 +1,6 @@
 
 import os
+import helpers
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, redirect, render_template, request, session
 
@@ -18,7 +19,11 @@ def index():
 
 @app.route("/register")
 def register():
-    return render_template("error.html", message="Page not found... I should probably make it...", code="404")
+    return helpers.lol()
+
+@app.route("/<name>")
+def other(name):
+    return helpers.lol("Still not made /"+name, 501)
 
 if __name__=="__main__":
         app.run(debug=True)
