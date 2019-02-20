@@ -3,6 +3,10 @@ nav .navbar-brand
     /* size for brand */
     font-size: xx-large;
 }
+nav
+{
+  background-color:#ffa500
+}
 
 main .form-control
 {
