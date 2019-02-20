@@ -1,5 +1,3 @@
-alert('It works!');
-
 let validuser ='';
 let inn = document.querySelector('#in');
 let co = document.querySelector('#co');
