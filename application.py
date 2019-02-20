@@ -1,6 +1,6 @@
 
 import os
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, redirect, render_template, request, session
 
 # Configure application + database
