@@ -39,17 +39,23 @@ def check():
 
     return jsonify(False)
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Register users"""
-    form = RegistrationForm()
-    return render_template("register.html", form=form)
+    if request.method == "GET":
+        form = RegistrationForm()
+        return render_template("register.html", form=form)
+    email = request.get.form("email")
+    return helpers.err(email, 501)
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Sign in users"""
-    form = LogInForm()
-    return render_template("login.html", form=form)
+    if request.method == "GET":
+        form = LogInForm()
+        return render_template("login.html", form=form)
+    return helpers.err("Still not made /", 501)
+
 
 @app.route("/<name>")
 def other(name):

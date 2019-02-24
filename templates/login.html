@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block icon %}diamond{% endblock %}
+
+{% block title %}
+Sign In
+{% endblock %}
+
+{% block main %}
+<div class="content-section">
+  <form action="/register" class="needs-validation" id="form" method="post">
+    {{ form.hidden_tag() }}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Sign in to your account</legend>
+        <div class="form-group">
+          {{ form.email.label(class="form-control-label")}}
+          <div>
+          {{ form.email(class="form-control form-control-lg")}}
+          </div>
+        </div>
+        <div id="5" class="invalid-feedback">Please enter your email address<p></p></div>
+        <div class="form-group">
+          {{ form.password.label(class="form-control-label")}}
+          <div>
+          {{ form.password(class="form-control form-control-lg")}}
+          </div>
+        </div>
+        <div id="2" class="invalid-feedback">Please enter your password<p></p></div>
+        <div class="form-group">
+          {{ form.remember.label(class="form-control-label")}}
+          <div>
+          {{ form.remember()}}
+          </div>
+        </div>
+        <button id='button' class="btn btn-primary" type="submit">Sign In</button>
+      </fieldset>
+  </form>
+</div>
+<script src="static/scripts/login.js"></script>
+{% endblock %}
