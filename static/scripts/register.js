@@ -1,7 +1,8 @@
 let validuser ='';
-let inn = document.querySelector('#in');
-let co = document.querySelector('#co');
-let pw = document.querySelector('#pw');
+let inn = document.querySelector('#username');
+let co = document.querySelector('#confirm_password');
+let pw = document.querySelector('#password');
+let em = document.querySelector('#email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
@@ -13,6 +14,11 @@ document.getElementById("button").addEventListener("click", function(event){
         {
             // show must provide username
             $('#4').show();
+        }
+        if (em.value.length == 0)
+        {
+            // show must provide email
+            $('#5').show();
         }
         if (pw.value.length == 0)
         {
@@ -52,9 +58,13 @@ pw.onkeyup = function() {
         // ALERT must enter a password
         $('#2').hide();
     }
-    else
+};
+
+em.onkeyup = function() {
+    if (em.value.length > 0)
     {
-        $('#2').show();
+        // ALERT must enter an email
+        $('#5').hide();
     }
 };
 
@@ -63,9 +73,5 @@ co.onkeyup = function() {
     {
         // ALERT passwords must match
         $('#3').show();
-    }
-    else
-    {
-        $('#3').hide();
     }
 };

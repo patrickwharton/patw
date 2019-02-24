@@ -17,6 +17,12 @@ main .form-control
     width: auto;
 }
 
+#form
+{
+    text-align: left;
+
+}
+
 main
 {
     /* scroll horizontally as needed */
