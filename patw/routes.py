@@ -1,27 +1,12 @@
+from patw import app
+from patw.forms import RegistrationForm, LogInForm
+import patw.helpers as helpers
+from patw.models import User
+from flask import jsonify, redirect, render_template, request, session, flash
 import os
-import helpers
-from forms import RegistrationForm, LogInForm
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, jsonify, redirect, render_template, request, session, flash
-from flask_session import Session
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
 
-
-# Configure application + database
-app = Flask(__name__)
-SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-db = SQLAlchemy(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = '0a2dbe5f115d5f81eeab2e75c65f98930f7b958a'
-from models import User
-db.create_all()
-
-# Auto reload templates
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-# Initiate session
-### TODO figure out flask Session
 
 @app.route("/")
 def index():
@@ -74,6 +59,13 @@ def register():
     email = request.form.get("email")
     username = request.form.get("username")
     hash = generate_password_hash(request.form.get("password"))
+    try:
+        user = User(username=username, email=email, hash=hash)
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return helpers.err("Account already associated with this email")
 
     # Duplicate emails are still unaccounted for
 
@@ -89,13 +81,10 @@ def login():
     """Sign in users"""
     form = LogInForm()
     if form.validate_on_submit():
-        continue
+        pass
     return render_template("login.html", form=form)
 
 
 @app.route("/<name>")
 def other(name):
     return helpers.err("Still not made /"+name, 501)
-
-if __name__=="__main__":
-        app.run(debug=True)

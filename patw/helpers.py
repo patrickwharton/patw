@@ -1,5 +1,5 @@
 # extra functions for patw
-from flask import redirect, render_template, request, session
+from flask import render_template
 
 def err(input=None, number=None):
     if not input:

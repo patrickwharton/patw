@@ -34,7 +34,7 @@ document.getElementById("button").addEventListener("click", function(event){
 });
 
 inn.onkeyup = function() {
-    if (inn.value.length < 2 || inn.value.length > 20)
+    if (inn.value.length >= 2 && inn.value.length <= 20)
     {
         // hide please choose username
         $('#4').hide();
