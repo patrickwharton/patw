@@ -2,8 +2,9 @@ import os
 import helpers
 from forms import RegistrationForm, LogInForm
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, jsonify, redirect, render_template, request, session
+from flask import Flask, jsonify, redirect, render_template, request, session, flash
 from flask_session import Session
+from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -39,20 +40,55 @@ def check():
 
     return jsonify(False)
 
+@app.route("/checkemail", methods=["GET"])
+def emailcheck():
+    """
+    Checks if email is a valid address, but not if the
+    domain exists or if the email actually exists,
+    and returns true or false in JSON format
+    """
+    return jsonify(validate_email(request.args.get("email")))
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register users"""
+    form = RegistrationForm()
     if request.method == "GET":
-        form = RegistrationForm()
         return render_template("register.html", form=form)
-    email = request.get.form("email")
-    return helpers.err(email, 501)
+
+    # Server-side checks
+    if not request.form.get("username"):
+        return helpers.err("User must provide username", 400)
+    elif not request.form.get("password"):
+        return helpers.err("User must provide password", 400)
+    elif not request.form.get("confirm_password"):
+        return helpers.err("User must retype password", 400)
+    if request.form.get("password") != request.form.get("confirm_password"):
+        return helpers.err("Passwords do not match")
+    if not validate_email(request.form.get("password")):
+        return helpers.err("Invalid email")
+    elif form.email.errors:
+        return helpers.err("OK so these email validators are different")
+
+    email = request.form.get("email")
+    username = request.form.get("username")
+    hash = generate_password_hash(request.form.get("password"))
+
+    # Duplicate emails are still unaccounted for
+
+    if form.validate_on_submit():
+        flash(f"Account Created for {form.username.data}!", "success")
+    else:
+        return helpers.err("How did I get here?")
+
+    return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Sign in users"""
+    form = LogInForm()
     if request.method == "GET":
-        form = LogInForm()
         return render_template("login.html", form=form)
     return helpers.err("Still not made /", 501)
 

@@ -1,4 +1,5 @@
 let validuser ='';
+let validemail ='';
 let inn = document.querySelector('#username');
 let co = document.querySelector('#confirm_password');
 let pw = document.querySelector('#password');
@@ -6,11 +7,11 @@ let em = document.querySelector('#email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
-    if (validuser == true && pw.value.length > 0 && pw.value == co.value)
+    if (validemail == true && validuser == true && pw.value.length > 0 && pw.value == co.value)
     {
         document.getElementById("form").submit();
     }
-        if (inn.value.length == 0)
+        if (inn.value.length < 2 || inn.value.length > 20)
         {
             // show must provide username
             $('#4').show();
@@ -33,7 +34,7 @@ document.getElementById("button").addEventListener("click", function(event){
 });
 
 inn.onkeyup = function() {
-    if (inn.value.length > 0)
+    if (inn.value.length < 2 || inn.value.length > 20)
     {
         // hide please choose username
         $('#4').hide();
@@ -50,6 +51,10 @@ inn.onkeyup = function() {
             }
         });
     }
+    else
+    {
+      $('#4').show();
+    }
 };
 
 pw.onkeyup = function() {
@@ -65,6 +70,24 @@ em.onkeyup = function() {
     {
         // ALERT must enter an email
         $('#5').hide();
+        $.get('/checkemail?email=' + em.value, function(data) {
+            validemail = data;
+
+            if (validemail == true)
+            {
+                $('#6').hide();
+            }
+            else
+            {
+                $('#6').show();
+            }
+        });
+    }
+    else
+    {
+        // show must provide email
+        $('#5').show();
+        $('#6').hide();
     }
 };
 
@@ -73,5 +96,9 @@ co.onkeyup = function() {
     {
         // ALERT passwords must match
         $('#3').show();
+    }
+    else
+    {
+      $('#3').hide();
     }
 };

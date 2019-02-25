@@ -52,7 +52,16 @@
     </nav>
 
     <main class="container p-5">
-        {% block main %}{% endblock %}
+      {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block main %}{% endblock %}
     </main>
     <footer class="small text-center text-muted">
       This is a website. Treat it as such.
