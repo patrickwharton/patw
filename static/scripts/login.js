@@ -1,10 +1,10 @@
-
+let validemail ='';
 let pw = document.querySelector('#password');
 let em = document.querySelector('#email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
-    if (pw.value.length > 0 && em.value.length > 0)
+    if (pw.value.length > 0 && validemail)
     {
         document.getElementById("form").submit();
     }
@@ -33,5 +33,23 @@ em.onkeyup = function() {
     {
         // ALERT must enter an email
         $('#5').hide();
+        $.get('/checkemail?email=' + em.value, function(data) {
+            validemail = data;
+
+            if (validemail == true)
+            {
+                $('#6').hide();
+            }
+            else
+            {
+                $('#6').show();
+            }
+        });
+    }
+    else
+    {
+        // show must provide email
+        $('#5').show();
+        $('#6').hide();
     }
 };

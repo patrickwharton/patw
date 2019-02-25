@@ -88,9 +88,9 @@ def register():
 def login():
     """Sign in users"""
     form = LogInForm()
-    if request.method == "GET":
-        return render_template("login.html", form=form)
-    return helpers.err("Still not made /", 501)
+    if form.validate_on_submit():
+        continue
+    return render_template("login.html", form=form)
 
 
 @app.route("/<name>")
