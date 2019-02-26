@@ -17,13 +17,12 @@ def index():
 def check():
     """Return true if username available, else false, in JSON format"""
     username = request.args.get("username")
-    if len(username) < 1:
+    if len(username) < 2 or len(username) > 20:
         return jsonify(False)
 
-    result = None ##db.execute("SELECT username FROM users WHERE username=:username", username=username)
+    result = User.query.filter_by(username=username).first()
     if not result:
         return jsonify(True)
-
     return jsonify(False)
 
 @app.route("/checkemail", methods=["GET"])
@@ -61,15 +60,19 @@ def register():
     username = request.form.get("username")
     hash = generate_password_hash(request.form.get("password"))
 
-    if form.validate_on_submit():
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return helpers.err("Username already taken.")
 
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return helpers.err("Email address already associated with an account.")
+
+    if form.validate_on_submit():
         user = User(username=username, email=email, hash=hash)
         db.session.add(user)
         db.session.commit()
-        # except IntegrityError:
-        #     db.session.rollback()
-        #     return helpers.err("Account already associated with this email")
-        flash(f"Account Created for {form.username.data}!", "success")
+        flash(f"Account Created for {username}!", "success")
     else:
         return helpers.err("How did I get here?")
 
