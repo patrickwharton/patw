@@ -23,11 +23,12 @@ Register
         <div class="form-group">
           {{ form.email.label(class="form-control-label")}}
           <div>
-            {{ form.email(class="form-control form-control-lg")}}
+            {{ form.email(class="form-control form-control-lg ", autocomplete="off")}}
           </div>
         </div>
         <div id="5" class="invalid-feedback">User must provide email<p></p></div>
         <div id="6" class="invalid-feedback">Invalid email<p></p></div>
+        <div id="7" class="invalid-feedback">Email address already associated with an account<p></p></div>
         <div class="form-group">
           {{ form.password.label(class="form-control-label")}}
           <div>

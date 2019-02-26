@@ -1,5 +1,5 @@
 let validuser ='';
-let validemail ='';
+let validemail ='0';
 let inn = document.querySelector('#username');
 let co = document.querySelector('#confirm_password');
 let pw = document.querySelector('#password');
@@ -34,7 +34,7 @@ document.getElementById("button").addEventListener("click", function(event){
 });
 
 inn.onkeyup = function() {
-    if (inn.value.length < 2 || inn.value.length > 20)
+    if (inn.value.length >= 2 && inn.value.length <= 20)
     {
         // hide please choose username
         $('#4').hide();
@@ -70,6 +70,7 @@ em.onkeyup = function() {
     {
         // ALERT must enter an email
         $('#5').hide();
+        $('#7').hide();
         $.get('/checkemail?email=' + em.value, function(data) {
             validemail = data;
 
@@ -77,10 +78,15 @@ em.onkeyup = function() {
             {
                 $('#6').hide();
             }
+            else if (validemail == '2')
+            {
+                $('#7').show();
+            }
             else
             {
                 $('#6').show();
             }
+
         });
     }
     else
@@ -88,6 +94,7 @@ em.onkeyup = function() {
         // show must provide email
         $('#5').show();
         $('#6').hide();
+        $('#7').hide();
     }
 };
 
