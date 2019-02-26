@@ -28,11 +28,17 @@ def check():
 @app.route("/checkemail", methods=["GET"])
 def emailcheck():
     """
+    Checks if email has been used, if so returns 2 in JSON,
+    else:
     Checks if email is a valid address, but not if the
     domain exists or if the email actually exists,
     and returns true or false in JSON format
     """
-    return jsonify(validate_email(request.args.get("email")))
+    email = request.args.get("email")
+    result = User.query.filter_by(email=email).first()
+    if result:
+        return jsonify('2')
+    return jsonify(validate_email(email))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -54,7 +60,7 @@ def register():
     if not validate_email(request.form.get("email")):
         return helpers.err("Invalid email")
     elif form.email.errors:
-        return helpers.err("OK so these email validators are different")
+        return helpers.err("OK so these email validators are different. Please let me know what you entered to get here!")
 
     email = request.form.get("email")
     username = request.form.get("username")
