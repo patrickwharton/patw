@@ -1,4 +1,4 @@
-from patw import app
+from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
 import patw.helpers as helpers
 from patw.models import User
@@ -7,6 +7,7 @@ import os
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
 
+db.create_all()
 
 @app.route("/")
 def index():
@@ -51,7 +52,7 @@ def register():
         return helpers.err("User must retype password", 400)
     if request.form.get("password") != request.form.get("confirm_password"):
         return helpers.err("Passwords do not match")
-    if not validate_email(request.form.get("password")):
+    if not validate_email(request.form.get("email")):
         return helpers.err("Invalid email")
     elif form.email.errors:
         return helpers.err("OK so these email validators are different")
@@ -59,17 +60,15 @@ def register():
     email = request.form.get("email")
     username = request.form.get("username")
     hash = generate_password_hash(request.form.get("password"))
-    try:
+
+    if form.validate_on_submit():
+
         user = User(username=username, email=email, hash=hash)
         db.session.add(user)
         db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        return helpers.err("Account already associated with this email")
-
-    # Duplicate emails are still unaccounted for
-
-    if form.validate_on_submit():
+        # except IntegrityError:
+        #     db.session.rollback()
+        #     return helpers.err("Account already associated with this email")
         flash(f"Account Created for {form.username.data}!", "success")
     else:
         return helpers.err("How did I get here?")
