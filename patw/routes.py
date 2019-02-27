@@ -1,6 +1,6 @@
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-import patw.helpers as helpers
+from patw.helpers import err, login_required
 from patw.models import User
 from flask import jsonify, redirect, render_template, request, session, flash
 import os
@@ -50,17 +50,17 @@ def register():
 
     # Server-side checks
     if not request.form.get("username"):
-        return helpers.err("User must provide username", 400)
+        return err("User must provide username", 400)
     elif not request.form.get("password"):
-        return helpers.err("User must provide password", 400)
+        return err("User must provide password", 400)
     elif not request.form.get("confirm_password"):
-        return helpers.err("User must retype password", 400)
+        return err("User must retype password", 400)
     if request.form.get("password") != request.form.get("confirm_password"):
-        return helpers.err("Passwords do not match")
+        return err("Passwords do not match")
     if not validate_email(request.form.get("email")):
-        return helpers.err("Invalid email")
+        return err("Invalid email")
     elif form.email.errors:
-        return helpers.err("OK so these email validators are different. Please let me know what you entered to get here!")
+        return err("OK so these email validators are different. Please let me know what you entered to get here!")
 
     email = request.form.get("email")
     username = request.form.get("username")
@@ -68,11 +68,11 @@ def register():
 
     user = User.query.filter_by(username=username).first()
     if user:
-        return helpers.err("Username already taken.")
+        return err("Username already taken.")
 
     user = User.query.filter_by(email=email).first()
     if user:
-        return helpers.err("Email address already associated with an account.")
+        return err("Email address already associated with an account.")
 
     if form.validate_on_submit():
         user = User(username=username, email=email, hash=hash)
@@ -80,7 +80,7 @@ def register():
         db.session.commit()
         flash(f"Account Created for {username}!", "success")
     else:
-        return helpers.err("How did I get here?")
+        return err("How did I get here?")
 
     return redirect("/")
 
@@ -95,4 +95,4 @@ def login():
 
 @app.route("/<name>")
 def other(name):
-    return helpers.err("Still not made /"+name, 501)
+    return err("Still not made /"+name, 501)
