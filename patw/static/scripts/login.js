@@ -13,11 +13,27 @@ document.getElementById("button").addEventListener("click", function(event){
             // show must provide email
             $('#5').show();
         }
+        else
+        {
+          $.get('/checkemail?email=' + em.value, function(data) {
+              validemail = data;
+
+              if (validemail == true || validemail == '2')
+              {
+                  $('#6').hide();
+              }
+              else
+              {
+                  $('#6').show();
+              }
+          });
+        }
         if (pw.value.length == 0)
         {
             // show please choose password
             $('#2').show();
         }
+
 });
 
 pw.onkeyup = function() {
@@ -25,31 +41,20 @@ pw.onkeyup = function() {
     {
         // ALERT must enter a password
         $('#2').hide();
+
     }
 };
 
 em.onkeyup = function() {
+    $('#6').hide();
     if (em.value.length > 0)
     {
         // ALERT must enter an email
         $('#5').hide();
-        $.get('/checkemail?email=' + em.value, function(data) {
-            validemail = data;
-
-            if (validemail == true || validemail == '2')
-            {
-                $('#6').hide();
-            }
-            else
-            {
-                $('#6').show();
-            }
-        });
     }
     else
     {
         // show must provide email
         $('#5').show();
-        $('#6').hide();
     }
 };
