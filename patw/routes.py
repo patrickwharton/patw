@@ -2,7 +2,7 @@ from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import err
 from patw.models import User
-from flask import jsonify, redirect, render_template, request, session, flash
+from flask import jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user
 import os
 from validate_email import validate_email
@@ -29,7 +29,7 @@ def check():
 @app.route("/checkemail", methods=["GET"])
 def emailcheck():
     """
-    Checks if email has been used, if so returns 2 in JSON,
+    Checks if email is in database, if so returns 2 in JSON,
     else:
     Checks if email is a valid address, but not if the
     domain exists or if the email actually exists,
@@ -38,9 +38,8 @@ def emailcheck():
     email = request.args.get("email")
     result = User.query.filter_by(email=email).first()
     if result:
-        return jsonify('2')
+        return jsonify('used')
     return jsonify(validate_email(email))
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -60,8 +59,6 @@ def register():
         return err("Passwords do not match")
     if not validate_email(request.form.get("email")):
         return err("Invalid email")
-    elif form.email.errors:
-        return err("OK so these email validators are different. Please let me know what you entered to get here!")
 
     email = request.form.get("email")
     username = request.form.get("username")
@@ -96,6 +93,7 @@ def login():
             flash(f"Successfully logged in! Welcome back {user.username}", "success")
             return redirect("/")
         flash("Login attempt failed. Incorrect email address or password", "danger")
+
     return render_template("login.html", form=form)
 
 @app.route("/logout")

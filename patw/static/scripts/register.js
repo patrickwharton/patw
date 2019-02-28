@@ -1,44 +1,44 @@
 let validuser ='';
 let validemail ='0';
-let inn = document.querySelector('#username');
-let co = document.querySelector('#confirm_password');
-let pw = document.querySelector('#password');
-let em = document.querySelector('#email');
+let username = document.querySelector('#username');
+let confirm_password = document.querySelector('#confirm_password');
+let password = document.querySelector('#password');
+let email = document.querySelector('#email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
-    if (validemail == true && validuser == true && pw.value.length > 0 && pw.value == co.value)
+    if (validemail == true && validuser == true && password.value.length > 0 && password.value == confirm_password.value)
     {
         document.getElementById("form").submit();
     }
-        if (inn.value.length < 2 || inn.value.length > 20)
+        if (username.value.length < 2 || username.value.length > 20)
         {
             // show must provide username
             $('#4').show();
         }
-        if (em.value.length == 0)
+        if (email.value.length == 0)
         {
             // show must provide email
             $('#5').show();
         }
-        if (pw.value.length == 0)
+        if (password.value.length == 0)
         {
             // show please choose password
             $('#2').show();
         }
-        if (co.value.length == 0 && pw.value.length != 0)
+        if (confirm_password.value.length == 0 && password.value.length != 0)
         {
             // show passwords must match
             $('#3').show();
         }
 });
 
-inn.onkeyup = function() {
-    if (inn.value.length >= 2 && inn.value.length <= 20)
+username.onkeyup = function() {
+    if (username.value.length >= 2 && username.value.length <= 20)
     {
         // hide please choose username
         $('#4').hide();
-        $.get('/check?username=' + inn.value, function(data) {
+        $.get('/check?username=' + username.value, function(data) {
             validuser = data;
 
             if (validuser == true)
@@ -57,28 +57,28 @@ inn.onkeyup = function() {
     }
 };
 
-pw.onkeyup = function() {
-    if (pw.value.length > 0)
+password.onkeyup = function() {
+    if (password.value.length > 0)
     {
         // ALERT must enter a password
         $('#2').hide();
     }
 };
 
-em.onkeyup = function() {
-    if (em.value.length > 0)
+email.onkeyup = function() {
+    if (email.value.length > 0)
     {
         // ALERT must enter an email
         $('#5').hide();
         $('#7').hide();
-        $.get('/checkemail?email=' + em.value, function(data) {
+        $.get('/checkemail?email=' + email.value, function(data) {
             validemail = data;
 
             if (validemail == true)
             {
                 $('#6').hide();
             }
-            else if (validemail == '2')
+            else if (validemail == 'used')
             {
                 $('#7').show();
             }
@@ -98,8 +98,8 @@ em.onkeyup = function() {
     }
 };
 
-co.onkeyup = function() {
-    if (pw.value != co.value)
+confirm_password.onkeyup = function() {
+    if (password.value != confirm_password.value)
     {
         // ALERT passwords must match
         $('#3').show();

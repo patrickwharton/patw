@@ -12,8 +12,3 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 
 from patw import routes
-
-
-# Initiate session
-### TODO figure out flask Session
-from flask_session import Session

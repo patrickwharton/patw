@@ -1,16 +1,16 @@
 let validemail ='';
-let pw = document.querySelector('#password');
-let em = document.querySelector('#email');
+let password = document.querySelector('#password');
+let email = document.querySelector('#email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
 
-    if (pw.value.length > 0)
+    if (password.value.length > 0)
     {
-      $.get('/checkemail?email=' + em.value, function(data) {
+      $.get('/checkemail?email=' + email.value, function(data) {
           validemail = data;
 
-          if (validemail == true || validemail == '2')
+          if (validemail == true || validemail == 'used')
           {
               document.getElementById("form").submit();
           }
@@ -20,29 +20,29 @@ document.getElementById("button").addEventListener("click", function(event){
           }
       });
     }
-    if (em.value.length == 0)
+    if (email.value.length == 0)
     {
         // show must provide email
         $('#5').show();
     }
-    if (pw.value.length == 0)
+    if (password.value.length == 0)
     {
         // show please choose password
         $('#2').show();
     }
 });
 
-pw.onkeyup = function() {
-    if (pw.value.length > 0)
+password.onkeyup = function() {
+    if (password.value.length > 0)
     {
         // ALERT must enter a password
         $('#2').hide();
     }
 };
 
-em.onkeyup = function() {
+email.onkeyup = function() {
     $('#6').hide();
-    if (em.value.length > 0)
+    if (email.value.length > 0)
     {
         // ALERT must enter an email
         $('#5').hide();

@@ -7,7 +7,7 @@ class RegistrationForm(FlaskForm):
     username = StringField("Username",
                 validators = [DataRequired(), Length(min=2, max=20)])
     email = StringField("Email",
-                validators = [DataRequired(), Email()])
+                validators = [DataRequired()])
     password = PasswordField("Password",
                 validators = [DataRequired()])
     confirm_password = PasswordField("Confirm Password",
@@ -16,7 +16,7 @@ class RegistrationForm(FlaskForm):
 
 class LogInForm(FlaskForm):
     email = StringField("Email",
-                validators = [DataRequired(), Email()])
+                validators = [DataRequired()])
     password = PasswordField("Password",
                 validators = [DataRequired()])
     remember = BooleanField("Remember Me")
