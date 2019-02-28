@@ -1,8 +1,9 @@
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-from patw.helpers import err, login_required
+from patw.helpers import err
 from patw.models import User
 from flask import jsonify, redirect, render_template, request, session, flash
+from flask_login import login_user, logout_user
 import os
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -89,9 +90,19 @@ def login():
     """Sign in users"""
     form = LogInForm()
     if form.validate_on_submit():
-        pass
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.hash, form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash(f"Successfully logged in! Welcome back {user.username}", "success")
+            return redirect("/")
+        flash("Login attempt failed. Incorrect email address or password", "danger")
     return render_template("login.html", form=form)
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash("Successfully logged out!", "success")
+    return redirect("/")
 
 @app.route("/<name>")
 def other(name):

@@ -1,7 +1,12 @@
-from patw import db
 from datetime import datetime
+from flask_login import UserMixin
+from patw import db, login_manager
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -9,6 +14,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     hash = db.Column(db.String(255), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def get_id(self):
+        return str(self.user_id)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}' created on {self.date_created})"

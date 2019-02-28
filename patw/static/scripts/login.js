@@ -36,7 +36,7 @@ em.onkeyup = function() {
         $.get('/checkemail?email=' + em.value, function(data) {
             validemail = data;
 
-            if (validemail == true)
+            if (validemail == true || validemail == '2')
             {
                 $('#6').hide();
             }
