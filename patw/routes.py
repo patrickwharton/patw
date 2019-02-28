@@ -3,7 +3,7 @@ from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import err
 from patw.models import User
 from flask import jsonify, redirect, render_template, request, flash
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 import os
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -85,13 +85,19 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Sign in users"""
+    if current_user.is_authenticated:
+        flash("Already logged in, please log out to change user", "warning")
+        return redirect("/")
     form = LogInForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.hash, form.password.data):
             login_user(user, remember=form.remember.data)
             flash(f"Successfully logged in! Welcome back {user.username}", "success")
-            return redirect("/")
+            if request.args.get("next"):
+                return redirect(request.args.get("next"))
+            else:
+                return redirect("/")
         flash("Login attempt failed. Incorrect email address or password", "danger")
 
     return render_template("login.html", form=form)
@@ -99,7 +105,7 @@ def login():
 @app.route("/logout")
 def logout():
     logout_user()
-    flash("Successfully logged out!", "success")
+    flash("Log out successful.", "success")
     return redirect("/")
 
 @app.route("/<name>")
