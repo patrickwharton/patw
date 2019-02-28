@@ -4,36 +4,32 @@ let em = document.querySelector('#email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
-    if (pw.value.length > 0 && validemail)
+
+    if (pw.value.length > 0)
     {
-        document.getElementById("form").submit();
+      $.get('/checkemail?email=' + em.value, function(data) {
+          validemail = data;
+
+          if (validemail == true || validemail == '2')
+          {
+              document.getElementById("form").submit();
+          }
+          else
+          {
+              $('#6').show();
+          }
+      });
     }
-        if (em.value.length == 0)
-        {
-            // show must provide email
-            $('#5').show();
-        }
-        else
-        {
-          $.get('/checkemail?email=' + em.value, function(data) {
-              validemail = data;
-
-              if (validemail == true || validemail == '2')
-              {
-                  $('#6').hide();
-              }
-              else
-              {
-                  $('#6').show();
-              }
-          });
-        }
-        if (pw.value.length == 0)
-        {
-            // show please choose password
-            $('#2').show();
-        }
-
+    if (em.value.length == 0)
+    {
+        // show must provide email
+        $('#5').show();
+    }
+    if (pw.value.length == 0)
+    {
+        // show please choose password
+        $('#2').show();
+    }
 });
 
 pw.onkeyup = function() {
@@ -41,7 +37,6 @@ pw.onkeyup = function() {
     {
         // ALERT must enter a password
         $('#2').hide();
-
     }
 };
 
