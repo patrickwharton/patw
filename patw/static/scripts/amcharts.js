@@ -12,7 +12,7 @@ var chart = am4core.create("chartdiv", am4maps.MapChart);
 chart.geodata = am4geodata_worldLow;
 
 // Set projection
-chart.projection = new am4maps.projections.Mercator();
+chart.projection = new am4maps.projections.Miller();
 
 // Create map polygon series
 var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
@@ -28,8 +28,11 @@ polygonSeries.heatRules.push({
 // Make map load polygon data (state shapes and names) from GeoJSON
 polygonSeries.useGeodata = true;
 
+
 // Set heatmap values for each state
 polygonSeries.data = data;
+
+//polygonSeries.exclude = ["AQ"];
 
 // Set up heat legend
 let heatLegend = chart.createChild(am4maps.HeatLegend);
@@ -38,7 +41,7 @@ heatLegend.align = "right";
 heatLegend.width = am4core.percent(25);
 heatLegend.marginRight = am4core.percent(4);
 heatLegend.minValue = 0;
-heatLegend.maxValue = 40000000;
+heatLegend.maxValue = 80000000;
 
 // Set up custom heat map legend labels using axis ranges
 var minRange = heatLegend.valueAxis.axisRanges.create();
