@@ -41,6 +41,36 @@ def emailcheck():
         return jsonify('used')
     return jsonify(validate_email(email))
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Sign in users"""
+    if current_user.is_authenticated:
+        flash("Already logged in, please log out to change user", "warning")
+        return redirect("/")
+    form = LogInForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.hash, form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash(f"Successfully logged in! Welcome back {user.username}", "success")
+            if request.args.get("next"):
+                return redirect(request.args.get("next"))
+            else:
+                return redirect("/")
+        flash("Login attempt failed. Incorrect email address or password", "danger")
+
+    return render_template("login.html", form=form)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash("Log out successful.", "success")
+    return redirect("/")
+
+@app.route("/map")
+def map():
+    return render_template("map.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register users"""
@@ -82,31 +112,7 @@ def register():
 
     return redirect("/")
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    """Sign in users"""
-    if current_user.is_authenticated:
-        flash("Already logged in, please log out to change user", "warning")
-        return redirect("/")
-    form = LogInForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.hash, form.password.data):
-            login_user(user, remember=form.remember.data)
-            flash(f"Successfully logged in! Welcome back {user.username}", "success")
-            if request.args.get("next"):
-                return redirect(request.args.get("next"))
-            else:
-                return redirect("/")
-        flash("Login attempt failed. Incorrect email address or password", "danger")
 
-    return render_template("login.html", form=form)
-
-@app.route("/logout")
-def logout():
-    logout_user()
-    flash("Log out successful.", "success")
-    return redirect("/")
 
 @app.route("/<name>")
 def other(name):
