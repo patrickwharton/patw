@@ -7,9 +7,13 @@ Index Page
 {% block main %}
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/maps.js"></script>
-<script src="https://www.amcharts.com/lib/4/geodata/usaAlbersLow.js"></script>
+<script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/kelly.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
-<script type="text/javascript" src="static/scripts/amcharts.js"></script>
 <div id="chartdiv"></div>
+<script type="text/javascript">
+var data = {{ data | tojson | safe }}
+</script>
+<script type="text/javascript" src="static/scripts/amcharts.js"></script>
+
 {% endblock %}

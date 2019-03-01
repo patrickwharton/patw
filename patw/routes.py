@@ -2,6 +2,7 @@ from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import err
 from patw.models import User
+from patw.time_spent import time_spent as ts
 from flask import jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user
 import os
@@ -69,7 +70,12 @@ def logout():
 
 @app.route("/map")
 def map():
-    return render_template("map.html")
+    countries, accounted_for = ts()
+    data = []
+    for country, time in countries.items():
+        data.append({"id":country, "value":time})
+
+    return render_template("map.html", data=data)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
