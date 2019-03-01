@@ -4,7 +4,7 @@ from patw.helpers import err
 from patw.models import User
 from patw.time_spent import time_spent as ts
 from flask import jsonify, redirect, render_template, request, flash
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 import os
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -68,14 +68,22 @@ def logout():
     flash("Log out successful.", "success")
     return redirect("/")
 
-@app.route("/map")
+@app.route("/map", methods=["GET", "POST"])
+@login_required
 def map():
-    countries, accounted_for = ts()
-    data = []
-    for country, time in countries.items():
-        data.append({"id":country, "value":time})
+    if request.method == "POST":
+        countries, accounted_for = ts()
+        data = []
+        for country, time in countries.items():
+            data.append({"id":country, "value":time})
+        current_user.map_data = data
+        return render_template("map.html", data=current_user.map_data)
 
-    return render_template("map.html", data=data)
+    if current_user.map_data:
+        return render_template("map.html", data=current_user.map_data)
+
+    return render_template("map.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

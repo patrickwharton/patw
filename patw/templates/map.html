@@ -5,6 +5,7 @@ Index Page
 {% endblock %}
 
 {% block main %}
+{% if data %}
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/maps.js"></script>
 <script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
@@ -15,5 +16,20 @@ Index Page
 var data = {{ data | tojson | safe }}
 </script>
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
+{% else %}
 
+<p>
+  Upload your polarsteps data here
+</p>
+<p>
+  The file required is the zip file, normally called
+  user_data, that you get when you request your data
+  from polarsteps
+</p>
+
+<form action="/map" method="post">
+  <input id="polardata" type="file" accept=".zip">
+</form>
+
+{% endif %}
 {% endblock %}
