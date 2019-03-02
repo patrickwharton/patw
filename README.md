@@ -10,4 +10,4 @@ TODO
 cookies
 location
 session config
-not reload when saying incorrect email/password
+a way for the user to clear their data from the database

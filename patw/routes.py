@@ -8,6 +8,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 import os
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 db.create_all()
 
@@ -68,17 +69,40 @@ def logout():
     flash("Log out successful.", "success")
     return redirect("/")
 
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = set(['zip'])
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route("/map", methods=["GET", "POST"])
 @login_required
 def map():
     if request.method == "POST":
-        countries, accounted_for = ts()
-        data = []
-        for country, time in countries.items():
-            data.append({"id":country, "value":time})
-        current_user.map_data = data
-        return render_template("map.html", data=current_user.map_data)
+        if 'polardata' not in request.files:
+            return redirect(request.url)
+        file = request.files['polardata']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect("/map")
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            data = []
+            for country, time in countries.items():
+                data.append({"id":country, "value":time})
 
+            """
+            SAVE DATA IN NEW TABLE IN DATABASE SOMEHOW HERE
+            # current_user.map_data = data
+            # db.session.commit()
+            remove data/consolidate methods of displaying data
+            """
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template("map.html", data=current_user.map_data)
+        else:
+            flash("Invalid file type")
+            return redirect("/map")
     if current_user.map_data:
         return render_template("map.html", data=current_user.map_data)
 

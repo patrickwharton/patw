@@ -27,8 +27,10 @@ var data = {{ data | tojson | safe }}
   from polarsteps
 </p>
 
-<form action="/map" method="post">
-  <input id="polardata" type="file" accept=".zip">
+<form action="/map" method="post" enctype=multipart/form-data>
+  <input name="polardata" type="file" accept=".zip">
+  <p></p>
+  <button id='button' class="btn btn-primary" type="submit">Create Map!</button>
 </form>
 
 {% endif %}
