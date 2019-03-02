@@ -99,7 +99,7 @@ def map():
             remove data/consolidate methods of displaying data
             """
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template("map.html", data=current_user.map_data)
+            return render_template("map.html", data=data)
         else:
             flash("Invalid file type")
             return redirect("/map")
