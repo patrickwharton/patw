@@ -29,8 +29,9 @@ class Polar(db.Model):
     country_code = db.Column(db.String(10), nullable=False)
     time_spent = db.Column(db.BigInteger, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False)
 
-    __table_args__ = (db.UniqueConstraint('country_code', 'user_id', name="_multiple_countries_uc"),)
+    __table_args__ = (db.UniqueConstraint('country_code', 'user_id', 'date_created', name="_multiple_countries_uc"),)
 
     def __repr__(self):
         return f"User #{user_id} spent {time_spent} seconds in {country_code}"

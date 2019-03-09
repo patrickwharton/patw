@@ -1,7 +1,8 @@
+from datetime import datetime
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import err
-from patw.models import User
+from patw.models import User, Polar
 from patw.time_spent import time_spent as ts
 from flask import jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
@@ -81,16 +82,23 @@ def map():
         if 'polardata' not in request.files:
             return redirect(request.url)
         file = request.files['polardata']
+
         if file.filename == '':
             flash('No selected file')
             return redirect("/map")
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             data = []
+            date_created = datetime.utcnow()
             for country, time in countries.items():
                 data.append({"id":country, "value":time})
+                entry = Polar(user_id=current_user.user_id, country_code=country,
+                            time_spent=time, date_created=date_created)
+                db.session.add(entry)
+            db.session.commit()
 
             """
             SAVE DATA IN NEW TABLE IN DATABASE SOMEHOW HERE
@@ -98,16 +106,28 @@ def map():
             # db.session.commit()
             remove data/consolidate methods of displaying data
             """
+
+
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
             return render_template("map.html", data=data)
         else:
             flash("Invalid file type")
             return redirect("/map")
-    if current_user.map_data:
-        return render_template("map.html", data=current_user.map_data)
 
+    # if current_user.map_data:
+    #     return render_template("map.html", data=current_user.map_data)
+    """
+    if user 1 map:
+        display map
+        with button saying add map
+    elif user >1 map:
+        display most recent map
+        with button saying add map
+        and dropdown to switch map
+
+    """
     return render_template("map.html")
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
