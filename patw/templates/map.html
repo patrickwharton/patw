@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
-
-{% block title %}
-Index Page
-{% endblock %}
+{% block user %}My{% endblock %}
+{% block title %}Map{% endblock %}
 
 {% block main %}
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
@@ -15,5 +13,11 @@ Index Page
 var data = {{ data | tojson | safe }}
 </script>
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
-
+<ul>
+{% for i in list %}
+<li>
+{{ i }}
+</li>
+{% endfor %}
+</ul>
 {% endblock %}

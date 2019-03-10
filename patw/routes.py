@@ -1,13 +1,15 @@
+from datetime import datetime
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-from patw.helpers import err
-from patw.models import User
+from patw.helpers import err, allowed_file, get_map_list
+from patw.models import User, Polar
 from patw.time_spent import time_spent as ts
 from flask import jsonify, redirect, render_template, request, flash
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 import os
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 db.create_all()
 
@@ -26,6 +28,46 @@ def check():
     if not result:
         return jsonify(True)
     return jsonify(False)
+
+@app.route("/createmap", methods=["GET", "POST"])
+@login_required
+def createmap():
+    if request.method == "POST":
+        if 'polardata' not in request.files:
+            return redirect(request.url)
+        file = request.files['polardata']
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect("/createmap")
+
+        elif file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            data = []
+            map_name = request.form.get('name')
+            date_created = datetime.utcnow()
+            if not map_name:
+                map_name = datetime.utcnow()
+                date_created = map_name
+            elif Polar.query.filter_by(user_id=current_user.user_id, map_name=map_name).first():
+                flash("You've already used that map name!", "warning")
+                return redirect("/createmap")
+            for country, time in countries.items():
+                data.append({"id":country, "value":time})
+                entry = Polar(user_id=current_user.user_id, country_code=country,
+                            time_spent=time, map_name=map_name, date_created=date_created)
+                db.session.add(entry)
+            db.session.commit()
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            return render_template("map.html", data=data)
+        else:
+            flash("Invalid file type")
+            return redirect("/createmap")
+
+    return render_template("createmap.html")
 
 @app.route("/checkemail", methods=["GET"])
 def emailcheck():
@@ -69,13 +111,11 @@ def logout():
     return redirect("/")
 
 @app.route("/map")
+@login_required
 def map():
-    countries, accounted_for = ts()
     data = []
-    for country, time in countries.items():
-        data.append({"id":country, "value":time})
-
-    return render_template("map.html", data=data)
+    list = get_map_list()
+    return render_template("map.html", data=data, list=list)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
