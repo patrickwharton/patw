@@ -62,7 +62,7 @@ def createmap():
             db.session.commit()
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            return render_template("map.html", data=data)
+            return redirect("/map")
         else:
             flash("Invalid file type")
             return redirect("/createmap")
@@ -114,8 +114,12 @@ def logout():
 @login_required
 def map():
     data = []
-    list = get_map_list()
-    return render_template("map.html", data=data, list=list)
+    map_list = get_map_list()
+    most_recent_map = map_list[-1]
+    map_data = Polar.query.filter_by(user_id=current_user.user_id, map_name=most_recent_map)
+    for entry in map_data:
+        data.append({"id":entry.country_code, "value":entry.time_spent})
+    return render_template("map.html", data=data, list=map_list)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

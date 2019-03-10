@@ -16,7 +16,7 @@ def err(input=None, number=None):
 
 def get_map_list():
     maps = Polar.query.filter_by(user_id=current_user.user_id
-                ).group_by(Polar.map_name).all()
+                ).group_by(Polar.map_name).order_by(Polar.date_created).all()
     list = []
     for map in maps:
         list.append(map.map_name)
