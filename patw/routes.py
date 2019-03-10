@@ -77,7 +77,7 @@ def allowed_file(filename):
 
 @app.route("/createmap", methods=["GET", "POST"])
 @login_required
-def map():
+def createmap():
     if request.method == "POST":
         if 'polardata' not in request.files:
             return redirect(request.url)
@@ -123,7 +123,7 @@ def map():
         and dropdown to switch map
 
     """
-    return render_template("map.html")
+    return render_template("createmap.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
