@@ -27,13 +27,14 @@ class Polar(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     country_code = db.Column(db.String(10), nullable=False)
-    time_spent = db.Column(db.BigInteger, nullable=False)
+    start_time = db.Column(db.BigInteger, nullable=False)
+    end_time = db.Column(db.BigInteger, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     map_name = db.Column(db.String(20), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False)
 
-    __table_args__ = (db.UniqueConstraint('country_code', 'user_id', 'map_name', name="_multiple_countries_uc"),)
+    __table_args__ = (db.UniqueConstraint('country_code', 'start_time', 'end_time', 'user_id', 'map_name', name="_multiple_countries_uc"),)
 
     def __repr__(self):
         user = User.query.filter_by(user_id=self.user_id).first()
-        return f"{user.username} spent {self.time_spent} seconds in {self.country_code} [{self.map_name}]"
+        return f"{user.username} spent from {self.start_time} to {self.end_time} in {self.country_code} [{self.map_name}]"

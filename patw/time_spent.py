@@ -18,8 +18,6 @@ def time_spent(rootdir = "/home/patrick/github/patw/patw/static/user_data.zip"):
     and returns a dictionary of the time spent (in seconds)
     in each country along with the a list of the time periods
     accounted_for
-    if trips are not started and ended at home set HOMEINCLUDED = True
-    to include the bookend steps
     accounted_for tracks the time in the users history that has been
     allocated a country, for possible future functionality
     """
@@ -88,6 +86,7 @@ def dir(rootdir):
 def helper(trips):
     accounted_for = []
     countries = {}
+    breakdown = []
     for trip in trips:
         start_time = None
         end_time = None
@@ -104,12 +103,13 @@ def helper(trips):
                     countries[country] += time
                 except KeyError:
                     countries[country] = time
+                breakdown.append([country, start_time, end_time])
             start_time = step[0]
             country = step[1]
             if not started:
                 started = start_time
         accounted_for.append([started, start_time])
-    return countries, accounted_for
+    return countries, accounted_for, breakdown
 
 if __name__=="__main__":
     time_spent()
