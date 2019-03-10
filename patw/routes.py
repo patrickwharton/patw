@@ -75,7 +75,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/map", methods=["GET", "POST"])
+@app.route("/createmap", methods=["GET", "POST"])
 @login_required
 def map():
     if request.method == "POST":
@@ -85,35 +85,31 @@ def map():
 
         if file.filename == '':
             flash('No selected file')
-            return redirect("/map")
+            return redirect("/createmap")
 
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             data = []
-            date_created = datetime.utcnow()
+            map_name = request.form.get('name')
+            if not map_name:
+                map_name = datetime.utcnow()
+            elif Polar.query.filter_by(user_id=current_user.user_id, map_name=map_name):
+                flash("You've already used that map name!")
+                return redirect("/createmap")
             for country, time in countries.items():
                 data.append({"id":country, "value":time})
                 entry = Polar(user_id=current_user.user_id, country_code=country,
-                            time_spent=time, date_created=date_created)
+                            time_spent=time, map_name=map_name)
                 db.session.add(entry)
             db.session.commit()
-
-            """
-            SAVE DATA IN NEW TABLE IN DATABASE SOMEHOW HERE
-            # current_user.map_data = data
-            # db.session.commit()
-            remove data/consolidate methods of displaying data
-            """
-
-
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             return render_template("map.html", data=data)
         else:
             flash("Invalid file type")
-            return redirect("/map")
+            return redirect("/createmap")
 
     # if current_user.map_data:
     #     return render_template("map.html", data=current_user.map_data)

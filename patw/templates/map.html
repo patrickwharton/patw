@@ -3,7 +3,6 @@
 {% block title %}Map{% endblock %}
 
 {% block main %}
-{% if data %}
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/maps.js"></script>
 <script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
@@ -14,22 +13,4 @@
 var data = {{ data | tojson | safe }}
 </script>
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
-{% else %}
-
-<p>
-  Upload your polarsteps data here
-</p>
-<p>
-  The file required is the zip file, normally called
-  user_data, that you get when you request your data
-  from polarsteps
-</p>
-
-<form action="/map" method="post" enctype=multipart/form-data>
-  <input name="polardata" type="file" accept=".zip">
-  <p></p>
-  <button id='button' class="btn btn-primary" type="submit">Create Map!</button>
-</form>
-
-{% endif %}
 {% endblock %}

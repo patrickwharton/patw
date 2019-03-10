@@ -81,6 +81,7 @@ email.onkeyup = function() {
             else if (validemail == 'used')
             {
                 $('#7').show();
+                $('#6').hide();
             }
             else
             {

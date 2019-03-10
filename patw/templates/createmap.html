@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block user %}Add a new{% endblock %}
+{% block title %}map!{% endblock %}
+
+{% block main %}
+<p>
+  Upload your polarsteps data here
+</p>
+<p>
+  The file required is the zip file, normally called
+  user_data, that you get when you request your data
+  from polarsteps
+</p>
+<form action="/map" method="post" enctype=multipart/form-data>
+  <input name="polardata" type="file" accept=".zip">
+  <p></p>
+  Select a name for your map<br>
+  <input name='name' class="form-control" type='text' placeholder="Optional">
+  <p></p>
+  <button id='button' class="btn btn-primary" type="submit">Create Map!</button>
+</form>
+{% endblock %}
