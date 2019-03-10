@@ -35,6 +35,5 @@ class Polar(db.Model):
     __table_args__ = (db.UniqueConstraint('country_code', 'user_id', 'map_name', name="_multiple_countries_uc"),)
 
     def __repr__(self):
-        return f"User #{self.user_id} spent {self.time_spent} seconds in {self.country_code}"
-# in User # data = db.relationship('something model', backref='author', lazy=True)
-# in other # user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+        user = User.query.filter_by(user_id=self.user_id).first()
+        return f"{user.username} spent {self.time_spent} seconds in {self.country_code} [{self.map_name}]"

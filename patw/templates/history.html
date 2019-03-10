@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block icon %}diamond{% endblock %}
+{% block user %}My{% endblock %}
+{% block title %}Data{% endblock %}
+
+{% block main %}
+<ul>
+  
+{% for entry in data %}
+<li>
+  {{ entry }}
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

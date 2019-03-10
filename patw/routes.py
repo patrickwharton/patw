@@ -1,3 +1,4 @@
+import os
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list, save_file
@@ -9,7 +10,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 db.create_all()
-
 # TEMPORARY # Creates admin profile and initialises Patrick's Map
 if not User.query.filter_by(username="padmin").first():
     admin = User(username="padmin", email="padmin",
@@ -75,6 +75,13 @@ def emailcheck():
         return jsonify('used')
     return jsonify(validate_email(email))
 
+@app.route("/history")
+@login_required
+def history():
+    user = User.query.filter_by(user_id=current_user.user_id).first()
+    map_data = user.map_data
+    return render_template("history.html", data=map_data)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Sign in users"""
@@ -101,16 +108,21 @@ def logout():
     flash("Log out successful.", "success")
     return redirect("/")
 
-@app.route("/map")
+@app.route("/map", methods=["GET", "POST"])
 @login_required
 def map():
     map_list = get_map_list()
     if not map_list:
         flash("You don't seem to have any maps yet, so here's one I made earlier!", "info")
         return redirect("/patricksmap")
-    most_recent_map = map_list[-1]
-    data = get_map_data(current_user.user_id, most_recent_map)
-    return render_template("map.html", data=data, list=map_list)
+    if request.args.get('m'):
+        map_name = request.args.get('m')
+    else:
+        map_name = map_list[-1]
+    data = get_map_data(current_user.user_id, map_name)
+    if len(map_list) == 1:
+        map_list = []
+    return render_template("map.html", data=data, map_list=map_list, current_map=map_name)
 
 @app.route("/patricksmap")
 def patricksmap():

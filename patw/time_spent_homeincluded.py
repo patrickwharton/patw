@@ -11,7 +11,7 @@ add in total life time spent
 
 """
 
-def time_spent(rootdir = "/home/patrick/github/patw/patw/static/user_data.zip"):
+def time_spent(rootdir = "/home/patrick/github/patw/patw/static/user_data.zip", HOMEINCLUDED = False):
     """
     takes in either Polarsteps zip file or the base
     directory of an extracted Polarsteps data request
@@ -24,20 +24,24 @@ def time_spent(rootdir = "/home/patrick/github/patw/patw/static/user_data.zip"):
     allocated a country, for possible future functionality
     """
 
+    # variables not required now but might for future functionality
+    homelat = 0
+    homelon = 0
+    home = "GB"
 
     if rootdir[-4:] == ".zip":
-        trips = zip(rootdir)
+        trips = zip(rootdir, HOMEINCLUDED, homelat, homelon, home)
 
     else:
-        trips = dir(rootdir)
+        trips = dir(rootdir, HOMEINCLUDED, homelat, homelon, home)
 
     if not trips:
         return None
 
-    return helper(trips)
+    return helper(trips, HOMEINCLUDED)
 
 
-def zip(file_name):
+def zip(file_name, HOMEINCLUDED, homelat, homelon, home):
     with ZipFile(file_name, 'r') as zip:
         # printing all the contents of the zip file
         location_list = []
@@ -56,11 +60,14 @@ def zip(file_name):
             for i in data["all_steps"]:
                 trips[j].append([i["start_time"], i["location"]["country_code"],
                             i["location"]["lon"], i["location"]["lat"]])
+            if HOMEINCLUDED:
+                end = data["end_date"]
+                trips[j].append([end, home, homelon, homelat])
             j += 1
     return trips
 
 
-def dir(rootdir):
+def dir(rootdir, HOMEINCLUDED, homelat, homelon, home):
     rootdir = rootdir + "/trip/**/*"
     file_list = [f for f in glob.iglob(rootdir, recursive=True) if os.path.isfile(f)]
     location_list = []
@@ -81,11 +88,14 @@ def dir(rootdir):
             for i in data["all_steps"]:
                 trips[j].append([i["start_time"], i["location"]["country_code"],
                             i["location"]["lon"], i["location"]["lat"]])
+            if HOMEINCLUDED:
+                end = data["end_date"]
+                trips[j].append([end, home, homelon, homelat])
         j += 1
     return trips
 
 
-def helper(trips):
+def helper(trips, HOMEINCLUDED):
     accounted_for = []
     countries = {}
     for trip in trips:
@@ -94,7 +104,7 @@ def helper(trips):
         first_step = True
         started = None
         for step in trip:
-            if first_step:
+            if (not HOMEINCLUDED) and first_step:
                 first_step = False
                 continue
             if start_time:

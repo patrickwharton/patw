@@ -1,6 +1,6 @@
 # extra functions for patw
 from datetime import datetime
-from flask import render_template, redirect, request
+from flask import flash, render_template, redirect, request
 from flask_login import current_user
 import os
 from patw import app, db
