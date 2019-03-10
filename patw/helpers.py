@@ -12,9 +12,7 @@ def add_map(file_location, map_name=None, user_id=None):
     try:
         countries, _, breakdown = ts(file_location)
     except TypeError:
-        flash("Please select a valid Polarsteps .zip file.", "danger")
-        return redirect("/createmap")
-        os.remove(file_location)
+        return 1
     data = []
 
     if not user_id:
@@ -39,6 +37,7 @@ def add_map(file_location, map_name=None, user_id=None):
                     date_created=date_created)
         db.session.add(polar)
     db.session.commit()
+    return 0
 
 def save_file(file):
     filename = secure_filename(file.filename)

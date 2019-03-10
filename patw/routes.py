@@ -51,9 +51,13 @@ def createmap():
 
         elif file and allowed_file(file.filename):
             file_location = save_file(file)
-            add_map(file_location)
+            error = add_map(file_location)
             os.remove(file_location)
-            return redirect("/map")
+            if error == 0:
+                return redirect("/map")
+            else:
+                flash(f"Error {error}: Please select a valid Polarsteps .zip file.", "danger")
+                return redirect("/createmap")
         else:
             flash("Invalid file type")
             return redirect("/createmap")
