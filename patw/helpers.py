@@ -1,7 +1,34 @@
 # extra functions for patw
-from flask import render_template
+from datetime import datetime
+from flask import render_template, redirect, request
 from flask_login import current_user
+import os
+from patw import app, db
 from patw.models import Polar
+from patw.time_spent import time_spent as ts
+from werkzeug.utils import secure_filename
+
+def add_map(file):
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    data = []
+    map_name = request.form.get('name')
+    date_created = datetime.utcnow()
+    if not map_name:
+        map_name = datetime.utcnow()
+        date_created = map_name
+    elif Polar.query.filter_by(user_id=current_user.user_id, map_name=map_name).first():
+        flash("You've already used that map name!", "warning")
+        return redirect("/createmap")
+    for country, time in countries.items():
+        data.append({"id":country, "value":time})
+        entry = Polar(user_id=current_user.user_id, country_code=country,
+                    time_spent=time, map_name=map_name, date_created=date_created)
+        db.session.add(entry)
+    db.session.commit()
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = set(['zip'])
@@ -13,6 +40,13 @@ def err(input=None, number=None):
         return render_template("error.html", message="Page not found... I should probably make it...", code="501")
     else:
         return render_template("error.html", message=input, code=str(number))
+
+def get_map_data(user_id, map_name):
+    data = []
+    map_data = Polar.query.filter_by(user_id=user_id, map_name=map_name)
+    for entry in map_data:
+        data.append({"id":entry.country_code, "value":entry.time_spent})
+    return data
 
 def get_map_list():
     maps = Polar.query.filter_by(user_id=current_user.user_id
