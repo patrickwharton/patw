@@ -1,7 +1,7 @@
 from datetime import datetime
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-from patw.helpers import err
+from patw.helpers import err, allowed_file, get_map_list
 from patw.models import User, Polar
 from patw.time_spent import time_spent as ts
 from flask import jsonify, redirect, render_template, request, flash
@@ -28,6 +28,46 @@ def check():
     if not result:
         return jsonify(True)
     return jsonify(False)
+
+@app.route("/createmap", methods=["GET", "POST"])
+@login_required
+def createmap():
+    if request.method == "POST":
+        if 'polardata' not in request.files:
+            return redirect(request.url)
+        file = request.files['polardata']
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect("/createmap")
+
+        elif file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            data = []
+            map_name = request.form.get('name')
+            date_created = datetime.utcnow()
+            if not map_name:
+                map_name = datetime.utcnow()
+                date_created = map_name
+            elif Polar.query.filter_by(user_id=current_user.user_id, map_name=map_name).first():
+                flash("You've already used that map name!", "warning")
+                return redirect("/createmap")
+            for country, time in countries.items():
+                data.append({"id":country, "value":time})
+                entry = Polar(user_id=current_user.user_id, country_code=country,
+                            time_spent=time, map_name=map_name, date_created=date_created)
+                db.session.add(entry)
+            db.session.commit()
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            return render_template("map.html", data=data)
+        else:
+            flash("Invalid file type")
+            return redirect("/createmap")
+
+    return render_template("createmap.html")
 
 @app.route("/checkemail", methods=["GET"])
 def emailcheck():
@@ -70,60 +110,12 @@ def logout():
     flash("Log out successful.", "success")
     return redirect("/")
 
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = set(['zip'])
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route("/createmap", methods=["GET", "POST"])
+@app.route("/map")
 @login_required
-def createmap():
-    if request.method == "POST":
-        if 'polardata' not in request.files:
-            return redirect(request.url)
-        file = request.files['polardata']
-
-        if file.filename == '':
-            flash('No selected file')
-            return redirect("/createmap")
-
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            countries, accounted_for = ts(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            data = []
-            map_name = request.form.get('name')
-            if not map_name:
-                map_name = datetime.utcnow()
-            elif Polar.query.filter_by(user_id=current_user.user_id, map_name=map_name):
-                flash("You've already used that map name!")
-                return redirect("/createmap")
-            for country, time in countries.items():
-                data.append({"id":country, "value":time})
-                entry = Polar(user_id=current_user.user_id, country_code=country,
-                            time_spent=time, map_name=map_name)
-                db.session.add(entry)
-            db.session.commit()
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            return render_template("map.html", data=data)
-        else:
-            flash("Invalid file type")
-            return redirect("/createmap")
-
-    # if current_user.map_data:
-    #     return render_template("map.html", data=current_user.map_data)
-    """
-    if user 1 map:
-        display map
-        with button saying add map
-    elif user >1 map:
-        display most recent map
-        with button saying add map
-        and dropdown to switch map
-
-    """
-    return render_template("createmap.html")
+def map():
+    data = []
+    list = get_map_list()
+    return render_template("map.html", data=data, list=list)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

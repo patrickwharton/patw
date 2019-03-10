@@ -30,10 +30,11 @@ class Polar(db.Model):
     time_spent = db.Column(db.BigInteger, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     map_name = db.Column(db.String(20), nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False)
 
     __table_args__ = (db.UniqueConstraint('country_code', 'user_id', 'map_name', name="_multiple_countries_uc"),)
 
     def __repr__(self):
-        return f"User #{user_id} spent {time_spent} seconds in {country_code}"
+        return f"User #{self.user_id} spent {self.time_spent} seconds in {self.country_code}"
 # in User # data = db.relationship('something model', backref='author', lazy=True)
 # in other # user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)

@@ -13,4 +13,11 @@
 var data = {{ data | tojson | safe }}
 </script>
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
+<ul>
+{% for i in list %}
+<li>
+{{ i }}
+</li>
+{% endfor %}
+</ul>
 {% endblock %}
