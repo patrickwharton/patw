@@ -1,6 +1,6 @@
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list
+from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list, save_file
 from patw.models import User, Polar
 from flask import jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
@@ -9,10 +9,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 db.create_all()
-if not User.query.filter_by(username="admin").first():
-    admin = User(username="admin", email="admin", hash=generate_password_hash("p"))
+
+# TEMPORARY # Creates admin profile and initialises Patrick's Map
+if not User.query.filter_by(username="padmin").first():
+    admin = User(username="padmin", email="padmin",
+                hash=generate_password_hash(app.config['SECRET_KEY']))
     db.session.add(admin)
     db.session.commit()
+    file_location = app.root_path + "/static/admin_data.zip"
+    admin = User.query.filter_by(username="padmin").first()
+    add_map(file_location, map_name='admin', user_id=admin.user_id)
 
 
 @app.route("/")
@@ -44,7 +50,9 @@ def createmap():
             return redirect("/createmap")
 
         elif file and allowed_file(file.filename):
-            add_map(file)
+            file_location = save_file(file)
+            add_map(file_location)
+            os.remove(file_location)
             return redirect("/map")
         else:
             flash("Invalid file type")
@@ -98,7 +106,7 @@ def logout():
 def map():
     map_list = get_map_list()
     if not map_list:
-        flash("You don't seem to have any maps yet, here's one I made earlier!", "info")
+        flash("You don't seem to have any maps yet, so here's one I made earlier!", "info")
         return redirect("/patricksmap")
     most_recent_map = map_list[-1]
     data = get_map_data(current_user.user_id, most_recent_map)
@@ -106,7 +114,7 @@ def map():
 
 @app.route("/patricksmap")
 def patricksmap():
-    data = get_map_data(User.query.filter_by(username='admin').first().user_id, 'admin')
+    data = get_map_data(User.query.filter_by(username='padmin').first().user_id, 'admin')
     return render_template("map.html", data=data, patrick=True)
 
 @app.route("/register", methods=["GET", "POST"])
