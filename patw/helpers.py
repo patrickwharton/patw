@@ -8,6 +8,8 @@ from patw.models import Polar
 from patw.time_spent import time_spent as ts
 from werkzeug.utils import secure_filename
 
+LABEL_LIST = ['Seconds', 'Days', 'Hours', 'Weeks', 'Years']
+
 def add_map(file_location, map_name=None, user_id=None):
     try:
         countries, _, breakdown = ts(file_location)
@@ -52,7 +54,7 @@ def allowed_file(filename):
 
 def err(input=None, number=404):
     if not input:
-        return render_template("error.html", message="Page not found... I should probably make it...", code=str(number))
+        return render_template("error.html", message="I should probably make it...", code=str(number))
     else:
         return render_template("error.html", message=input, code=str(number))
 
@@ -72,7 +74,7 @@ def get_map_data(user_id, map_name):
 
 def get_map_list():
     maps = Polar.query.filter_by(user_id=current_user.user_id
-                ).group_by(Polar.map_name).order_by(Polar.date_created).all()
+                ).group_by(Polar.map_name).order_by(Polar.date_created.desc()).all()
     list = []
 
     for map in maps:

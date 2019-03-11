@@ -1,4 +1,5 @@
-// Script obtained from https://www.amcharts.com/demos/us-heat-map/?theme=kelly
+// Script based on https://www.amcharts.com/demos/us-heat-map/?theme=kelly
+// Modified by me
 
 // Themes begin
 am4core.useTheme(am4themes_kelly);
@@ -27,13 +28,20 @@ polygonSeries.heatRules.push({
 
 // Make map load polygon data (state shapes and names) from GeoJSON
 polygonSeries.useGeodata = true;
+chart.deltaLongitude = -11;
 
 
 // Set heatmap values for each state
 polygonSeries.data = data;
-
-//polygonSeries.exclude = ["AQ"];
-
+let aq = false;
+for (var i = 0; i < data.length; i++) {
+  if (data[i].id == "AQ") {
+    aq = true;
+  };
+};
+if (!aq) {
+  polygonSeries.exclude = ["AQ"]
+}
 // Set up heat legend
 let heatLegend = chart.createChild(am4maps.HeatLegend);
 heatLegend.series = polygonSeries;

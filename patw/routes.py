@@ -1,7 +1,7 @@
 import os
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
+from patw.helpers import LABEL_LIST, add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
 from patw.models import User, Polar
 from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
@@ -124,11 +124,17 @@ def map():
         return redirect("/patricksmap")
     if request.args.get('m'):
         map_name = request.args.get('m')
+        if map_name not in map_list:
+            flash(f"You don't have a map called {map_name}!", "warning")
+            map_name = map_list[0]
     else:
-        map_name = map_list[-1]
+        map_name = map_list[0]
 
     if request.args.get('l'):
         label = request.args.get('l')
+        if label not in LABEL_LIST:
+            flash(f"{label} is not a supported time period.", "warning")
+            label = 'Days'
     else:
         label = 'Days'
 
@@ -137,17 +143,20 @@ def map():
     if len(map_list) == 1:
         map_list = []
     return render_template("map.html", data=data, map_list=map_list,
-                current_map=map_name, label=label)
+                current_map=map_name, label=label, label_list=LABEL_LIST)
 
 @app.route("/patricksmap")
 def patricksmap():
     if request.args.get('l'):
         label = request.args.get('l')
+        if label not in LABEL_LIST:
+            flash(f"{label} is not a supported time period.", "warning")
+            label = 'Days'
     else:
         label = 'Days'
     data = get_map_data(User.query.filter_by(username='padmin').first().user_id, 'admin')
     data = label_maker(data)
-    return render_template("map.html", data=data, patrick=True, label=label)
+    return render_template("map.html", data=data, patrick=True, label=label, label_list=LABEL_LIST)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
