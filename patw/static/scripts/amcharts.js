@@ -41,7 +41,7 @@ heatLegend.align = "right";
 heatLegend.width = am4core.percent(25);
 heatLegend.marginRight = am4core.percent(4);
 heatLegend.minValue = 0;
-heatLegend.maxValue = 80000000;
+heatLegend.maxValue = 1;
 
 // Set up custom heat map legend labels using axis ranges
 var minRange = heatLegend.valueAxis.axisRanges.create();

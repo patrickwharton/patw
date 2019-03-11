@@ -5,7 +5,7 @@
 
 {% block main %}
 {% if patrick %}
-Here is Patrick's Map
+Here is Patrick's heat map
 {% elif map_list %}
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" name='dropdown' type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -13,10 +13,11 @@ Here is Patrick's Map
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     {% for map in map_list %}
-      <a class="dropdown-item" href="/map?m={{ map }}">{{ map }}</a>
+      <a class="dropdown-item" href="/map?m={{ map }}&l={{ label }}">{{ map }}</a>
     {% endfor %}
   </div>
 </div>
+<br>
 {% endif %}
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/maps.js"></script>
@@ -30,17 +31,17 @@ var label = {{ label | tojson | safe }}
 </script>
 
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
-
+<br>
 <div class="dropdown">
   <button class="btn btn-secondary btn-sm dropdown-toggle" name='labeldropdown' type="button" id="labelMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {{ label }}
   </button>
   <div class="dropdown-menu" aria-labelledby="labelMenuButton">
-    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Seconds">Seconds</a>
-    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Hours">Hours</a>
-    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Days">Days</a>
-    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Weeks">Weeks</a>
-    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Years">Years</a>
+    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Seconds">Seconds</a>
+    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Hours">Hours</a>
+    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Days">Days</a>
+    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Weeks">Weeks</a>
+    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Years">Years</a>
   </div>
 </div>
 {% endblock %}

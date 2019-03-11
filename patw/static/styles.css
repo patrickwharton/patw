@@ -1,15 +1,18 @@
-nav .navbar-brand
-{
+ @import url('https://fonts.googleapis.com/css?family=Gafata');
+
+nav .navbar-brand {
     /* size for brand */
     font-size: xx-large;
 }
-nav
-{
-  background-color:#ffa500
+* {
+	font-family: 'Galdeano', sans-serif;
 }
 
-main .form-control
-{
+nav {
+  background-color:#660076
+}
+
+main .form-control {
     /* center form controls */
     display: inline-block;
 
@@ -17,23 +20,12 @@ main .form-control
     width: auto;
 }
 
-#form
-{
-    text-align: left;
-
-}
-
-main
-{
+main {
     /* scroll horizontally as needed */
     overflow-x: auto;
-
-    /* center contents */
-    text-align: left;
 }
 
-main img
-{
+main img {
     /* constrain images on small screens */
     max-width: 100%;
 }

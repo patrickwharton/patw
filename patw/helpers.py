@@ -14,7 +14,7 @@ def add_map(file_location, map_name=None, user_id=None):
     except TypeError:
         return 1
     data = []
-
+    date_created = datetime.utcnow()
     if not user_id:
         user_id = current_user.user_id
 
@@ -22,10 +22,7 @@ def add_map(file_location, map_name=None, user_id=None):
         map_name = request.form.get('name')
 
     if not map_name:
-        map_name = datetime.utcnow()
-        date_created = map_name
-    else:
-        date_created = datetime.utcnow()
+        map_name = str(date_created)[:19]
 
     if Polar.query.filter_by(user_id=user_id, map_name=map_name).first():
         flash("You've already used that map name!", "warning")
@@ -53,9 +50,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def err(input=None, number=None):
+def err(input=None, number=404):
     if not input:
-        return render_template("error.html", message="Page not found... I should probably make it...", code="501")
+        return render_template("error.html", message="Page not found... I should probably make it...", code=str(number))
     else:
         return render_template("error.html", message=input, code=str(number))
 
@@ -86,12 +83,12 @@ def label_maker(data):
     for entry in data:
             entry['seconds_label'] = ": {:,} seconds".format(entry['value'])
             value = int(entry['value'])/3600
-            entry['hours_label'] = ": {:,.1f} hours".format(value)
+            entry['hours_label'] = ": {:,.0f} hours".format(value)
             value = value/24
             entry['days_label'] = ": {:,.1f} days".format(value)
             value = value/7
             entry['weeks_label'] = ": {:,.1f} weeks".format(value)
             # https://www.grc.nasa.gov/www/k-12/Numbers/Math/Mathematical_Thinking/calendar_calculations.htm
             value = int(entry['value'])/31556926
-            entry['years_label'] = ": {:,.1f} years".format(value)
+            entry['years_label'] = ": {:,.2f} years".format(value)
     return data

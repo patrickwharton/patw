@@ -141,8 +141,13 @@ def map():
 
 @app.route("/patricksmap")
 def patricksmap():
+    if request.args.get('l'):
+        label = request.args.get('l')
+    else:
+        label = 'Days'
     data = get_map_data(User.query.filter_by(username='padmin').first().user_id, 'admin')
-    return render_template("map.html", data=data, patrick=True)
+    data = label_maker(data)
+    return render_template("map.html", data=data, patrick=True, label=label)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -189,4 +194,4 @@ def register():
 
 @app.route("/<name>")
 def other(name):
-    return err("Still not made /"+name, 501)
+    return err()
