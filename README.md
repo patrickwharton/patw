@@ -33,4 +33,4 @@ Criticisms:
 
 Polarsteps doesn't recognise Kosovo as a country for some stupid reason, so there's not gonna be any Kosovan colouring anytime soon and will instead be added to Serbia - unless I somehow force it or actually implement lat/long with my own country defs
 
-This website ugly, orange and purple? what the actual fuck were you thinking?
+This website ugly, purple? what the actual fuck were you thinking?

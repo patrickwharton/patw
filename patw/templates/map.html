@@ -5,7 +5,7 @@
 
 {% block main %}
 {% if patrick %}
-Here is Patrick's heat map
+<div style="padding-bottom:5px">Here is Patrick's heat map</div>
 {% elif map_list %}
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" name='dropdown' type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -13,7 +13,7 @@ Here is Patrick's heat map
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     {% for map in map_list %}
-      <a class="dropdown-item" href="/map?m={{ map }}&l={{ label }}">{{ map }}</a>
+      <a class="dropdown-item{% if map == current_map %} active{% endif %}" href="/map?m={{ map }}&l={{ label }}">{{ map }}</a>
     {% endfor %}
   </div>
 </div>
@@ -37,11 +37,9 @@ var label = {{ label | tojson | safe }}
     {{ label }}
   </button>
   <div class="dropdown-menu" aria-labelledby="labelMenuButton">
-    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Seconds">Seconds</a>
-    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Hours">Hours</a>
-    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Days">Days</a>
-    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Weeks">Weeks</a>
-    <a class="dropdown-item" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l=Years">Years</a>
+    {% for l in label_list %}
+    <a class="dropdown-item{% if label == l %} active{% endif %}" href="/{% if patrick %}patricksmap?{% else %}map?m={{ current_map }}&{% endif %}l={{ l }}">{{ l }}</a>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}
