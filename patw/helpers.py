@@ -70,8 +70,7 @@ def get_map_data(user_id, map_name):
         except KeyError:
             temp[entry.country_code] = (entry.end_time - entry.start_time)
     for country, value in temp.items():
-        label = ": " + "{:,}".format(value)
-        data.append({"id":country, "value":value, "label":label})
+        data.append({"id":country, "value":value})
     return data
 
 def get_map_list():
@@ -83,24 +82,16 @@ def get_map_list():
         list.append(map.map_name)
     return list
 
-def label_maker(data, type):
+def label_maker(data):
     for entry in data:
-        if type == 'seconds':
-            entry['label'] = ": {:,} seconds".format(entry['value'])
-        elif type == 'hours':
+            entry['seconds_label'] = ": {:,} seconds".format(entry['value'])
             value = int(entry['value'])/3600
-            entry['label'] = ": {:,.1f} hours".format(value)
-        elif type == 'days':
-            value = int(entry['value'])/86400
-            entry['label'] = ": {:,.1f} days".format(value)
-        elif type == 'weeks':
-            value = int(entry['value'])/604800
-            entry['label'] = ": {:,.1f} weeks".format(value)
-        elif type == 'years':
+            entry['hours_label'] = ": {:,.1f} hours".format(value)
+            value = value/24
+            entry['days_label'] = ": {:,.1f} days".format(value)
+            value = value/7
+            entry['weeks_label'] = ": {:,.1f} weeks".format(value)
             # https://www.grc.nasa.gov/www/k-12/Numbers/Math/Mathematical_Thinking/calendar_calculations.htm
             value = int(entry['value'])/31556926
-            entry['label'] = ": {:,.1f} years".format(value)
-        else:
-            entry['label'] = 'error'
-
+            entry['years_label'] = ": {:,.1f} years".format(value)
     return data

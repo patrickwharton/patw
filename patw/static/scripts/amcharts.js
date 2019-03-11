@@ -58,7 +58,26 @@ heatLegend.valueAxis.renderer.labels.template.adapter.add("text", function(label
 
 // Configure series tooltip
 var polygonTemplate = polygonSeries.mapPolygons.template;
-polygonTemplate.tooltipText = "{name}{label}";
+if (label == 'Seconds')
+{
+  polygonTemplate.tooltipText = "{name}{seconds_label}";
+}
+else if (label == 'Hours')
+{
+  polygonTemplate.tooltipText = "{name}{hours_label}";
+}
+else if (label == 'Days')
+{
+  polygonTemplate.tooltipText = "{name}{days_label}";
+}
+else if (label == 'Weeks')
+{
+  polygonTemplate.tooltipText = "{name}{weeks_label}";
+}
+else if (label == 'Years')
+{
+  polygonTemplate.tooltipText = "{name}{years_label}";
+}
 polygonTemplate.nonScalingStroke = true;
 polygonTemplate.strokeWidth = 0.5;
 

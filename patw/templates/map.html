@@ -26,7 +26,21 @@ Here is Patrick's Map
 <div id="chartdiv"></div>
 <script type="text/javascript">
 var data = {{ data | tojson | safe }}
+var label = {{ label | tojson | safe }}
 </script>
+
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
 
+<div class="dropdown">
+  <button class="btn btn-secondary btn-sm dropdown-toggle" name='labeldropdown' type="button" id="labelMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{ label }}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="labelMenuButton">
+    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Seconds">Seconds</a>
+    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Hours">Hours</a>
+    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Days">Days</a>
+    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Weeks">Weeks</a>
+    <a class="dropdown-item" href="/map?m={{ current_map }}&l=Years">Years</a>
+  </div>
+</div>
 {% endblock %}

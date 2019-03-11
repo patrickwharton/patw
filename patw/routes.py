@@ -126,11 +126,18 @@ def map():
         map_name = request.args.get('m')
     else:
         map_name = map_list[-1]
+
+    if request.args.get('l'):
+        label = request.args.get('l')
+    else:
+        label = 'Days'
+
     data = get_map_data(current_user.user_id, map_name)
-    data = label_maker(data, 'hours')
+    data = label_maker(data)
     if len(map_list) == 1:
         map_list = []
-    return render_template("map.html", data=data, map_list=map_list, current_map=map_name)
+    return render_template("map.html", data=data, map_list=map_list,
+                current_map=map_name, label=label)
 
 @app.route("/patricksmap")
 def patricksmap():
