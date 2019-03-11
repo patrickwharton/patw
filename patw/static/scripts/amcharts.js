@@ -58,7 +58,7 @@ heatLegend.valueAxis.renderer.labels.template.adapter.add("text", function(label
 
 // Configure series tooltip
 var polygonTemplate = polygonSeries.mapPolygons.template;
-polygonTemplate.tooltipText = "{name}: {value}";
+polygonTemplate.tooltipText = "{name}{label}";
 polygonTemplate.nonScalingStroke = true;
 polygonTemplate.strokeWidth = 0.5;
 

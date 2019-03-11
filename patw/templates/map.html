@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block user %}My{% endblock %}
+{% block user %}{% if patrick %}Patrick's{% else %}My{% endif %}{% endblock %}
 {% block title %}Map{% endblock %}
 
 {% block main %}

@@ -19,14 +19,10 @@ change from seconds to a more useful time unit days/hours
 change scales
 change labels
 color schemes
-only save if new
-or only save on add new map
-choose a map name, default datetime
-defaults to /mymap, if not redirect to /map
-have my personal map on show somewhere hardcoded
+clickable alert patricksmap -> createmap
 
 change history into manage account data
-choosing a default map
+
 allow users to add/delete specific rows, or entire maps
 add something explaining that this is based on steps not lat/longs
 

@@ -3,7 +3,7 @@ from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list, save_file
 from patw.models import User, Polar
-from flask import jsonify, redirect, render_template, request, flash
+from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from validate_email import validate_email
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -84,6 +84,9 @@ def emailcheck():
 def history():
     user = User.query.filter_by(user_id=current_user.user_id).first()
     map_data = user.map_data
+    if not map_data:
+        flash(Markup("You don't seem to have any maps yet, so here's one I made earlier! <a href='/createmap' class='alert-link'>Click here to make your own!</a>"), "info")
+        return redirect("/patricksmap")
     return render_template("history.html", data=map_data)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -97,7 +100,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.hash, form.password.data):
             login_user(user, remember=form.remember.data)
-            flash(f"Successfully logged in! Welcome back {user.username}", "success")
+            flash(f"Successfully logged in. Welcome back {user.username}!", "success")
             if request.args.get("next"):
                 return redirect(request.args.get("next"))
             else:
@@ -117,7 +120,7 @@ def logout():
 def map():
     map_list = get_map_list()
     if not map_list:
-        flash("You don't seem to have any maps yet, so here's one I made earlier!", "info")
+        flash(Markup("You don't seem to have any maps yet, so here's one I made earlier! <a href='/createmap' class='alert-link'>Click here to make your own!</a>"), "info")
         return redirect("/patricksmap")
     if request.args.get('m'):
         map_name = request.args.get('m')
@@ -168,7 +171,7 @@ def register():
         user = User(username=username, email=email, hash=hash)
         db.session.add(user)
         db.session.commit()
-        flash(f"Account Created for {username}!", "success")
+        flash(Markup(f"Account Created for {username}!<a href='/login' class='alert-link'> Click here to Log In</a>"), "success")
     else:
         return err("How did I get here?")
 

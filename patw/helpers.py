@@ -70,7 +70,8 @@ def get_map_data(user_id, map_name):
         except KeyError:
             temp[entry.country_code] = (entry.end_time - entry.start_time)
     for country, value in temp.items():
-        data.append({"id":country, "value":value})
+        label = ": " + "{:,}".format(value)
+        data.append({"id":country, "value":value, "label":label})
     return data
 
 def get_map_list():
