@@ -4,12 +4,12 @@
 
 {% block main %}
 <p>
-  Upload your polarsteps data here
+  Upload your polarsteps data here.
 </p>
 <p>
   The file required is the zip file, normally called
   user_data, that you get when you request your data
-  from polarsteps
+  from polarsteps.
 </p>
 <form action="/createmap" method="post" enctype=multipart/form-data>
   <input name="polardata" type="file" accept=".zip">

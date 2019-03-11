@@ -16,19 +16,19 @@ document.getElementById("button").addEventListener("click", function(event){
           }
           else
           {
-              $('#6').show();
+              $('#invalid_email').show();
           }
       });
     }
     if (email.value.length == 0)
     {
         // show must provide email
-        $('#5').show();
+        $('#enter_email').show();
     }
     if (password.value.length == 0)
     {
         // show please choose password
-        $('#2').show();
+        $('#enter_password').show();
     }
 });
 
@@ -36,20 +36,20 @@ password.onkeyup = function() {
     if (password.value.length > 0)
     {
         // ALERT must enter a password
-        $('#2').hide();
+        $('#enter_password').hide();
     }
 };
 
 email.onkeyup = function() {
-    $('#6').hide();
+    $('#invalid_email').hide();
     if (email.value.length > 0)
     {
         // ALERT must enter an email
-        $('#5').hide();
+        $('#enter_email').hide();
     }
     else
     {
         // show must provide email
-        $('#5').show();
+        $('#enter_email').show();
     }
 };
