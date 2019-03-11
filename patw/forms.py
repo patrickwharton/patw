@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import FileField, StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
@@ -21,3 +21,8 @@ class LogInForm(FlaskForm):
                 validators = [DataRequired()])
     remember = BooleanField("Remember Me")
     submit = SubmitField("Sign In")
+
+class UploadForm(FlaskForm):
+    file = FileField("Select File", validators = [DataRequired()])
+    map_name = StringField("Optional: Name Your Map", validators = [Length(min=2, max=20)])
+    submit = SubmitField("Create Map!")

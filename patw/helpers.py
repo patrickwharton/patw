@@ -82,3 +82,25 @@ def get_map_list():
     for map in maps:
         list.append(map.map_name)
     return list
+
+def label_maker(data, type):
+    for entry in data:
+        if type == 'seconds':
+            entry['label'] = ": {:,} seconds".format(entry['value'])
+        elif type == 'hours':
+            value = int(entry['value'])/3600
+            entry['label'] = ": {:,.1f} hours".format(value)
+        elif type == 'days':
+            value = int(entry['value'])/86400
+            entry['label'] = ": {:,.1f} days".format(value)
+        elif type == 'weeks':
+            value = int(entry['value'])/604800
+            entry['label'] = ": {:,.1f} weeks".format(value)
+        elif type == 'years':
+            # https://www.grc.nasa.gov/www/k-12/Numbers/Math/Mathematical_Thinking/calendar_calculations.htm
+            value = int(entry['value'])/31556926
+            entry['label'] = ": {:,.1f} years".format(value)
+        else:
+            entry['label'] = 'error'
+
+    return data

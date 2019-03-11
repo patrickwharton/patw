@@ -11,8 +11,9 @@
   user_data, that you get when you request your data
   from polarsteps.
 </p>
-<form action="/createmap" method="post" enctype=multipart/form-data>
-  <input name="polardata" type="file" accept=".zip">
+<form action="/createmap" class="needs-validation" method="post" enctype=multipart/form-data>
+  <input name="polardata" type="file" accept=".zip" required>
+  <div id="select_file" class="invalid-feedback">Please select a file.<p></p></div>
   <p></p>
   Select a name for your map<br>
   <input name='name' class="form-control" type='text' placeholder="Optional">

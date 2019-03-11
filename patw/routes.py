@@ -1,7 +1,7 @@
 import os
 from patw import app, db
 from patw.forms import RegistrationForm, LogInForm
-from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list, save_file
+from patw.helpers import add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
 from patw.models import User, Polar
 from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
@@ -127,6 +127,7 @@ def map():
     else:
         map_name = map_list[-1]
     data = get_map_data(current_user.user_id, map_name)
+    data = label_maker(data, 'hours')
     if len(map_list) == 1:
         map_list = []
     return render_template("map.html", data=data, map_list=map_list, current_map=map_name)

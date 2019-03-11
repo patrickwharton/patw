@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block user %}{% if patrick %}Patrick's{% else %}My{% endif %}{% endblock %}
 {% block title %}Map{% endblock %}
+{% block icon %}{% if patrick %}double{% else %}diamond{% endif %}{% endblock %}
 
 {% block main %}
 {% if patrick %}
