@@ -1,13 +1,13 @@
  @import url('https://fonts.googleapis.com/css?family=Gafata');
 
 body {
-  background-color: #222222
+  background-color: #fff
 }
 
 
 * {
-	font-family: 'Galdeano', sans-serif;
-  color:#ddd;
+	font-family: 'Galdeano', sans-serif !important;
+
 }
 
 nav {
@@ -16,6 +16,9 @@ nav {
 nav .navbar-brand {
     /* size for brand */
     font-size: xx-large;
+}
+li.nav-link:hover {
+  cursor:pointer;
 }
 .btn-secondary {
   background-color:#5B2A66

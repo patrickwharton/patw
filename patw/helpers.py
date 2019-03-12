@@ -4,6 +4,7 @@ from flask import flash, render_template, redirect, request
 from flask_login import current_user
 import os
 from patw import app, db
+from patw.forms import LogInForm
 from patw.models import Polar
 from patw.time_spent import time_spent as ts
 from werkzeug.utils import secure_filename
@@ -54,9 +55,9 @@ def allowed_file(filename):
 
 def err(input=None, number=404):
     if not input:
-        return render_template("error.html", message="I should probably make it...", code=str(number))
+        return render_template("error.html", message="I should probably make it...", code=str(number), loginform = LogInForm())
     else:
-        return render_template("error.html", message=input, code=str(number))
+        return render_template("error.html", message=input, code=str(number), loginform = LogInForm())
 
 def get_map_data(user_id, map_name):
     data = []

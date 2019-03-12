@@ -1,18 +1,18 @@
-let validemail ='';
-let password = document.querySelector('#password');
-let email = document.querySelector('#email');
+let login_validemail ='';
+let login_password = document.querySelector('#login_password');
+let login_email = document.querySelector('#login_email');
 
 document.getElementById("button").addEventListener("click", function(event){
     event.preventDefault();
 
-    if (password.value.length > 0)
+    if (login_password.value.length > 0)
     {
-      $.get('/checkemail?email=' + email.value, function(data) {
-          validemail = data;
+      $.get('/checkemail?email=' + login_email.value, function(data) {
+          login_validemail = data;
 
-          if (validemail == true || validemail == 'used')
+          if (login_validemail == true || login_validemail == 'used')
           {
-              document.getElementById("form").submit();
+              document.getElementById("loginform").submit();
           }
           else
           {
@@ -20,29 +20,29 @@ document.getElementById("button").addEventListener("click", function(event){
           }
       });
     }
-    if (email.value.length == 0)
+    if (login_email.value.length == 0)
     {
         // show must provide email
         $('#enter_email').show();
     }
-    if (password.value.length == 0)
+    if (login_password.value.length == 0)
     {
         // show please choose password
         $('#enter_password').show();
     }
 });
 
-password.onkeyup = function() {
-    if (password.value.length > 0)
+login_password.onkeyup = function() {
+    if (login_password.value.length > 0)
     {
         // ALERT must enter a password
         $('#enter_password').hide();
     }
 };
 
-email.onkeyup = function() {
+login_email.onkeyup = function() {
     $('#invalid_email').hide();
-    if (email.value.length > 0)
+    if (login_email.value.length > 0)
     {
         // ALERT must enter an email
         $('#enter_email').hide();

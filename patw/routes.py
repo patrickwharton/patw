@@ -23,7 +23,7 @@ if not User.query.filter_by(username="padmin").first():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", loginform = LogInForm())
 
 @app.route("/check", methods=["GET"])
 def check():
@@ -95,11 +95,11 @@ def login():
     if current_user.is_authenticated:
         flash("Already logged in, please log out to change user", "warning")
         return redirect("/")
-    form = LogInForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.hash, form.password.data):
-            login_user(user, remember=form.remember.data)
+    loginform = LogInForm()
+    if loginform.validate_on_submit():
+        user = User.query.filter_by(email=loginform.email.data).first()
+        if user and check_password_hash(user.hash, loginform.password.data):
+            login_user(user, remember=loginform.remember.data)
             flash(f"Successfully logged in. Welcome back {user.username}!", "success")
             if request.args.get("next"):
                 return redirect(request.args.get("next"))
@@ -107,7 +107,7 @@ def login():
                 return redirect("/")
         flash("Login attempt failed. Incorrect email address or password", "danger")
 
-    return render_template("login.html", form=form)
+    return render_template("login.html", loginform=loginform)
 
 @app.route("/logout")
 def logout():
@@ -156,14 +156,14 @@ def patricksmap():
         label = 'Days'
     data = get_map_data(User.query.filter_by(username='padmin').first().user_id, 'admin')
     data = label_maker(data)
-    return render_template("map.html", data=data, patrick=True, label=label, label_list=LABEL_LIST)
+    return render_template("map.html", loginform = LogInForm(), data=data, patrick=True, label=label, label_list=LABEL_LIST)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register users"""
     form = RegistrationForm()
     if request.method == "GET":
-        return render_template("register.html", form=form)
+        return render_template("register.html", form=form, loginform = LogInForm())
 
     # Server-side checks
     if not request.form.get("username"):
