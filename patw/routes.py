@@ -4,12 +4,13 @@ from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import LABEL_LIST, add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
 from patw.helpers import get_flag_url, get_code, get_country
 from patw.models import User, Polar
+from patw.stats import get_pandas_df, time_spent_bar
 from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from validate_email import validate_email
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import sys
 
 db.create_all()
 # TEMPORARY # Creates admin profile and initialises Patrick's Map
@@ -26,6 +27,13 @@ if not User.query.filter_by(username="padmin").first():
 @app.route("/")
 def index():
     return render_template("index.html", loginform = LogInForm(), flag_url=get_flag_url('AL'))
+
+@app.route("/t")
+@login_required
+def t():
+    df = get_pandas_df()
+    img = time_spent_bar(df)
+    return render_template("index.html", img = img, loginform = LogInForm(), flag_url=get_flag_url('AL'))
 
 @app.route("/check", methods=["GET"])
 def check():
