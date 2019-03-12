@@ -1,4 +1,5 @@
 # extra functions for patw
+from datapackage import Package
 from datetime import datetime
 from flask import flash, render_template, redirect, request
 from flask_login import current_user
@@ -10,6 +11,7 @@ from patw.time_spent import time_spent as ts
 from werkzeug.utils import secure_filename
 
 LABEL_LIST = ['Seconds', 'Days', 'Hours', 'Weeks', 'Years']
+FLAGS_URL = 'https://raw.githubusercontent.com/cristiroma/countries/master/data/flags/'
 
 def add_map(file_location, map_name=None, user_id=None):
     try:
@@ -39,12 +41,6 @@ def add_map(file_location, map_name=None, user_id=None):
     db.session.commit()
     return 0
 
-def save_file(file):
-    filename = secure_filename(file.filename)
-    file_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file.save(file_location)
-    return file_location
-
 def allowed_file(filename):
     """
     obtained from http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
@@ -58,6 +54,38 @@ def err(input=None, number=404):
         return render_template("error.html", message="I should probably make it...", code=str(number), loginform = LogInForm())
     else:
         return render_template("error.html", message=input, code=str(number), loginform = LogInForm())
+
+package = Package('https://datahub.io/core/country-list/datapackage.json')
+
+def get_country(code):
+    '''
+    Takes in a 2 letter ISO country code string and returns the country name
+    If country code is invalid returns None
+    '''
+    list = package.resources[1].read()
+    for entry in list:
+        if entry[1] == code:
+            return entry[0]
+    return None
+
+def get_code(country):
+    '''
+    Takes in a country name string and returns the 2 letter ISO country code
+    If country name is spelt worng or invalid returns None
+    '''
+    list = package.resources[1].read()
+    for entry in list:
+        if entry[0] == country:
+            return entry[1]
+    return None
+
+def get_flag_url(input):
+    if type(input) != str:
+        return None
+    if len(input) != 2:
+        input = get_code(input)
+
+    return FLAGS_URL + input + '-128.png'
 
 def get_map_data(user_id, map_name):
     data = []
@@ -95,3 +123,9 @@ def label_maker(data):
             value = int(entry['value'])/31556926
             entry['years_label'] = ": {:,.2f} years".format(value)
     return data
+
+def save_file(file):
+    filename = secure_filename(file.filename)
+    file_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_location)
+    return file_location
