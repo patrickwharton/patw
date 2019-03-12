@@ -11,7 +11,8 @@ from patw.time_spent import time_spent as ts
 from werkzeug.utils import secure_filename
 
 LABEL_LIST = ['Seconds', 'Days', 'Hours', 'Weeks', 'Years']
-FLAGS_URL = 'https://raw.githubusercontent.com/cristiroma/countries/master/data/flags/'
+FLAGS_URL = 'https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/'
+FLAGS_SUFFIX = '.png'
 
 def add_map(file_location, map_name=None, user_id=None):
     try:
@@ -68,7 +69,7 @@ def get_country(code):
         return 'Czechia'
     elif code == 'MK':
         return 'North Macedonia'
-    
+
     list = package.resources[1].read()
     for entry in list:
         if entry[1] == code:
@@ -92,7 +93,7 @@ def get_flag_url(input):
     if len(input) != 2:
         input = get_code(input)
 
-    return FLAGS_URL + input + '-128.png'
+    return FLAGS_URL + input.lower() + FLAGS_SUFFIX
 
 def get_map_data(user_id, map_name):
     data = []

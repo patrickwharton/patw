@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block icon %}double{% endblock %}
+{% block user %}My{% endblock %}
+{% block title %}Profile{% endblock %}
+
+{% block main %}
+{% for img in flags %}
+<img style="max-width:19%; margin-bottom:5px; border:1px solid #aaa" src="{{ img }}" alt="">
+{% endfor %}
+{% endblock %}

@@ -178,6 +178,15 @@ def patricksmap():
     data = label_maker(data)
     return render_template("map.html", loginform = LogInForm(), data=data, patrick=True, label=label, label_list=LABEL_LIST)
 
+@app.route("/profile")
+@login_required
+def profile():
+    data = get_map_data(current_user.user_id, get_map_list()[0])
+    flags = []
+    for country in data:
+        flags.append(get_flag_url(country['id']))
+    return render_template("profile.html", flags=flags)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register users"""
