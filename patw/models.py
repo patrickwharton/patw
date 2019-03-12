@@ -19,6 +19,9 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return str(self.user_id)
 
+    def get_username(self):
+        return str(self.username)
+
     def __repr__(self):
         return f"User('{self.username}', '{self.email}' created on {self.date_created})"
 

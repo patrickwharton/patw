@@ -62,6 +62,13 @@ def get_country(code):
     Takes in a 2 letter ISO country code string and returns the country name
     If country code is invalid returns None
     '''
+    if code == 'VA':
+        return 'Vatican City'
+    elif code == 'CZ':
+        return 'Czechia'
+    elif code == 'MK':
+        return 'North Macedonia'
+    
     list = package.resources[1].read()
     for entry in list:
         if entry[1] == code:

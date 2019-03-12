@@ -10,7 +10,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from validate_email import validate_email
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-import sys
+
 
 db.create_all()
 # TEMPORARY # Creates admin profile and initialises Patrick's Map
@@ -28,12 +28,16 @@ if not User.query.filter_by(username="padmin").first():
 def index():
     return render_template("index.html", loginform = LogInForm(), flag_url=get_flag_url('AL'))
 
-@app.route("/t")
+@app.route("/charts")
 @login_required
-def t():
+def charts():
+    user = User.query.filter_by(user_id=current_user.user_id).first()
+    if not user.map_data:
+        flash(Markup("You don't seem to have any maps yet, so here's one I made earlier! <a href='/createmap' class='alert-link'>Click here to make your own!</a>"), "info")
+        return redirect("/patrickschart")
     df = get_pandas_df()
     img = time_spent_bar(df)
-    return render_template("index.html", img = img, loginform = LogInForm(), flag_url=get_flag_url('AL'))
+    return render_template("charts.html", img = img, loginform = LogInForm())
 
 @app.route("/check", methods=["GET"])
 def check():
@@ -154,6 +158,12 @@ def map():
         map_list = []
     return render_template("map.html", data=data, map_list=map_list,
                 current_map=map_name, label=label, label_list=LABEL_LIST)
+
+@app.route("/patrickschart")
+def patrickschart():
+    df = get_pandas_df(username='padmin')
+    img = time_spent_bar(df, username='padmin', current_map='admin')
+    return render_template("charts.html", img = img, loginform = LogInForm())
 
 @app.route("/patricksmap")
 def patricksmap():
