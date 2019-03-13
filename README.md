@@ -14,17 +14,20 @@ location
 session config
 a way for the user to clear their data from the database
 
-exclude AQ? maybe if not included or something
-change from seconds to a more useful time unit days/hours
 change scales
-change labels
-color schemes
-clickable alert patricksmap -> createmap
+color schemes?
 
 change history into manage account data
 
 allow users to add/delete specific rows, or entire maps
 add something explaining that this is based on steps not lat/longs
+
+Chart ideas:
+continents
+average date in country?
+change y axis label?
+amcharts interactive charts
+thru ajax maybe?
 
 url_for
 choosing ski sign?

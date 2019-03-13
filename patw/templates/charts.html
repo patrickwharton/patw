@@ -4,5 +4,20 @@
 {% block title %}Chart Page{% endblock %}
 
 {% block main %}
-<img src="{{ img }}" alt="">
+{% if patrick %}
+<div style="padding-bottom:5px">Here is Patrick's chart</div>
+{% elif map_list %}
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" name='dropdown' type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Map: {{ current_map }}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    {% for map in map_list %}
+      <a class="dropdown-item{% if map == current_map %} active{% endif %}" href="/charts?m={{ map }}">{{ map }}</a>
+    {% endfor %}
+  </div>
+</div>
+<br>
+{% endif %}
+<img class="chart" src="{{ img }}" alt="">
 {% endblock %}

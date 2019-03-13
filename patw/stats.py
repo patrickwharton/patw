@@ -7,27 +7,25 @@ from patw import db
 from patw.helpers import get_country, get_map_list
 from patw.models import Polar, User
 import seaborn as sns
-import sys
 
-def get_pandas_df(username=None):
-    if not username:
-        df = pd.read_sql_query(f'select * from polar where user_id = {current_user.user_id}', db.session.bind, parse_dates=['date_created'])
-    else:
-        user_id = User.query.filter_by(username=username).first().user_id
-        df = pd.read_sql_query(f'select * from polar where user_id = {user_id}', db.session.bind, parse_dates=['date_created'])
+def get_single_map_df(username, current_map):
+    user_id = User.query.filter_by(username=username).first().user_id
+    df = pd.read_sql_query(f'select * from polar where user_id = {user_id} and map_name = "{current_map}"', db.session.bind, parse_dates=['date_created'])
     return df
 
-def time_spent_bar(df, current_map=None, username=None):
+def time_spent_bar(current_map=None, username=None):
     img = io.BytesIO()
-    '''
-    Add in sum(time in country) group by country
 
-    '''
     if not current_map:
         map_list = get_map_list()
         current_map = map_list[0]
-    # Removes values from other maps
-    df = df[df.map_name == current_map]
+
+    if username == 'padmin':
+        name = 'Patrick'
+    elif not username:
+        username = name = User.get_username(current_user)
+
+    df = get_single_map_df(username=username, current_map=current_map)
 
     # Calculate total time spent
     df['time_spent'] = (df['end_time'] - df['start_time']) / 86400
@@ -41,15 +39,13 @@ def time_spent_bar(df, current_map=None, username=None):
     sns.set_context("paper")
 
     ax = sns.barplot(x = 'country', y = 'time_spent', data = df, palette = 'bright')
-    if username == 'padmin':
-        username = 'Patrick'
-    elif not username:
-        username = User.get_username(current_user)
-    ax.set_title(f'Time {username} has spent on holiday per country')
+
+    ax.set_title(f'Time {name} has spent on holiday per country')
     ax.set_ylabel("Time Spent (Days)")
     ax.set_xlabel("Country")
     for item in ax.get_xticklabels():
         item.set_rotation(90)
+        item.set_ha('center')
     plt.savefig(img, format='png', bbox_inches='tight', pad_inches=0.5)
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue()).decode()

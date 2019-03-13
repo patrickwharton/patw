@@ -61,3 +61,17 @@ main img {
   padding-left: 1px;
   border: 1px solid #5B2A66;
 }
+
+.flag {
+  max-width:19%;
+  margin-bottom:5px;
+  border:1px solid #aaa
+}
+
+.chart {
+  max-width: 200%;
+  min-width:600px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}

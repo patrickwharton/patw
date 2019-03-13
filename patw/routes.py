@@ -4,7 +4,7 @@ from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import LABEL_LIST, add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
 from patw.helpers import get_flag_url, get_code, get_country
 from patw.models import User, Polar
-from patw.stats import get_pandas_df, time_spent_bar
+from patw.stats import time_spent_bar
 from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from validate_email import validate_email
@@ -26,18 +26,32 @@ if not User.query.filter_by(username="padmin").first():
 
 @app.route("/")
 def index():
-    return render_template("index.html", loginform = LogInForm(), flag_url=get_flag_url('AL'))
+    return render_template("index.html", flag_url=get_flag_url('AL'))
+
+@app.context_processor
+def context_processor():
+    dictionary = dict(loginform = LogInForm())
+    return dictionary
 
 @app.route("/charts")
 @login_required
 def charts():
-    user = User.query.filter_by(user_id=current_user.user_id).first()
-    if not user.map_data:
+    map_list = get_map_list()
+    if not map_list:
         flash(Markup("You don't seem to have any maps yet, so here's one I made earlier! <a href='/createmap' class='alert-link'>Click here to make your own!</a>"), "info")
         return redirect("/patrickschart")
-    df = get_pandas_df()
-    img = time_spent_bar(df)
-    return render_template("charts.html", img = img, loginform = LogInForm())
+    if request.args.get('m'):
+        map_name = request.args.get('m')
+        if map_name not in map_list:
+            flash(f"You don't have a map called {map_name}!", "warning")
+            map_name = map_list[0]
+    else:
+        map_name = map_list[0]
+
+    if len(map_list) == 1:
+        map_list = []
+    img = time_spent_bar(current_map=map_name)
+    return render_template("charts.html", current_map=map_name, map_list=map_list, img = img)
 
 @app.route("/check", methods=["GET"])
 def check():
@@ -161,9 +175,8 @@ def map():
 
 @app.route("/patrickschart")
 def patrickschart():
-    df = get_pandas_df(username='padmin')
-    img = time_spent_bar(df, username='padmin', current_map='admin')
-    return render_template("charts.html", img = img, loginform = LogInForm())
+    img = time_spent_bar(username='padmin', current_map='admin')
+    return render_template("charts.html", patrick=True, img = img)
 
 @app.route("/patricksmap")
 def patricksmap():
@@ -176,7 +189,7 @@ def patricksmap():
         label = 'Days'
     data = get_map_data(User.query.filter_by(username='padmin').first().user_id, 'admin')
     data = label_maker(data)
-    return render_template("map.html", loginform = LogInForm(), data=data, patrick=True, label=label, label_list=LABEL_LIST)
+    return render_template("map.html", data=data, patrick=True, label=label, label_list=LABEL_LIST)
 
 @app.route("/profile")
 @login_required
@@ -192,7 +205,7 @@ def register():
     """Register users"""
     form = RegistrationForm()
     if request.method == "GET":
-        return render_template("register.html", form=form, loginform = LogInForm())
+        return render_template("register.html", form=form)
 
     # Server-side checks
     if not request.form.get("username"):
