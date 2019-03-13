@@ -24,13 +24,6 @@ add something explaining that this is based on steps not lat/longs
 
 Chart ideas:
 continents
-average date in country?
-change y axis label?
-amcharts interactive charts
-thru ajax maybe?
-
-url_for
-choosing ski sign?
 
 Criticisms:
 
