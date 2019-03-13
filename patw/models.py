@@ -40,4 +40,8 @@ class Polar(db.Model):
 
     def __repr__(self):
         user = User.query.filter_by(user_id=self.user_id).first()
-        return f"{user.username} spent from {self.start_time} to {self.end_time} for a total of {self.end_time - self.start_time} in {self.country_code} [{self.map_name}]"
+        # return f"{user.username} spent from {self.start_time} to {self.end_time} for a total of
+        #             {self.end_time - self.start_time} in {self.country_code} [{self.map_name}]"
+        return f"{user.username} was in {self.country_code} from {datetime.utcfromtimestamp(self.start_time)} \
+                    until {datetime.utcfromtimestamp(self.start_time)} for a total of \
+                    {((self.end_time - self.start_time) / 86400):.2f} days. [{self.map_name}]"

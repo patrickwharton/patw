@@ -17,6 +17,9 @@ nav .navbar-brand {
     /* size for brand */
     font-size: xx-large;
 }
+.dropdown-content:hover .dropdown-content {
+display: block;
+}
 li.nav-link:hover {
   cursor:pointer;
 }
