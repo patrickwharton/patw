@@ -4,7 +4,7 @@ from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import LABEL_LIST, add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
 from patw.helpers import get_flag_url, get_code, get_country
 from patw.models import User, Polar
-from patw.stats import time_spent_bar
+from patw.charts import time_spent_bar, continents_gantt
 from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from validate_email import validate_email
@@ -30,12 +30,13 @@ def index():
 
 @app.context_processor
 def context_processor():
-    dictionary = dict(loginform = LogInForm())
+    charts_list = [['Countries Bar Chart', '/charts/countriesbar'], ['Continents', '/charts/contgantt']]
+    dictionary = dict(loginform = LogInForm(), charts_list=charts_list)
     return dictionary
 
-@app.route("/charts")
+@app.route("/charts/<string:chart>")
 @login_required
-def charts():
+def charts(chart):
     map_list = get_map_list()
     if not map_list:
         flash(Markup("You don't seem to have any maps yet, so here's one I made earlier! <a href='/createmap' class='alert-link'>Click here to make your own!</a>"), "info")
@@ -50,8 +51,11 @@ def charts():
 
     if len(map_list) == 1:
         map_list = []
-    img = time_spent_bar(current_map=map_name)
-    return render_template("charts.html", current_map=map_name, map_list=map_list, img = img)
+    if chart == 'countriesbar':
+        img = time_spent_bar(current_map=map_name)
+    elif chart == 'contgantt':
+        img = continents_gantt(current_map=map_name)
+    return render_template("charts.html", current_chart=chart, current_map=map_name, map_list=map_list, img = img)
 
 @app.route("/check", methods=["GET"])
 def check():
@@ -116,6 +120,10 @@ def history():
         flash(Markup("You don't seem to have any maps yet, so here's one I made earlier! <a href='/createmap' class='alert-link'>Click here to make your own!</a>"), "info")
         return redirect("/patricksmap")
     return render_template("history.html", data=map_data)
+
+@app.route("/jchart")
+def jchart():
+    return render_template("jchart.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

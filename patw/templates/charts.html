@@ -13,11 +13,20 @@
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     {% for map in map_list %}
-      <a class="dropdown-item{% if map == current_map %} active{% endif %}" href="/charts?m={{ map }}">{{ map }}</a>
+      <a class="dropdown-item{% if map == current_map %} active{% endif %}" href="/charts/{{ current_chart }}?m={{ map }}">{{ map }}</a>
     {% endfor %}
   </div>
 </div>
 <br>
 {% endif %}
-<img class="chart" src="{{ img }}" alt="">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<img class="img-chart" src="{{ img }}" alt="">
+<div id="chart" class="chart">
+  <script>
+        var graphs = {{ plot | safe }};
+        Plotly.plot('bargraph',graphs,{});
+  </script>
+</div>
+
 {% endblock %}

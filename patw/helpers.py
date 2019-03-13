@@ -1,4 +1,5 @@
 # extra functions for patw
+import csv
 from datapackage import Package
 from datetime import datetime
 from flask import flash, render_template, redirect, request
@@ -42,6 +43,31 @@ def add_map(file_location, map_name=None, user_id=None):
     db.session.commit()
     return 0
 
+def all_csv(column1, column2, value1):
+    with open(app.root_path + '/static/all.csv') as csv_file:
+        '''
+        Takes in 2 column refs and a value in column1,
+        returns the corresponding value in column2
+
+        COLUMN NAMES
+        0: name,
+        alpha-2,
+        alpha-3,
+        country-code,
+        iso_3166-2,
+        5: region (continent),
+        sub-region,
+        intermediate-region,
+        region-code,
+        sub-region-code,
+        10: intermediate-region-code
+        '''
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            if row[column1] == value1:
+                return str(row[column2])
+    return None
+
 def allowed_file(filename):
     """
     obtained from http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
@@ -63,29 +89,15 @@ def get_country(code):
     Takes in a 2 letter ISO country code string and returns the country name
     If country code is invalid returns None
     '''
-    if code == 'VA':
-        return 'Vatican City'
-    elif code == 'CZ':
-        return 'Czechia'
-    elif code == 'MK':
-        return 'North Macedonia'
+    return str(all_csv(1, 0, code))
 
-    list = package.resources[1].read()
-    for entry in list:
-        if entry[1] == code:
-            return entry[0]
-    return None
 
 def get_code(country):
     '''
     Takes in a country name string and returns the 2 letter ISO country code
     If country name is spelt worng or invalid returns None
     '''
-    list = package.resources[1].read()
-    for entry in list:
-        if entry[0] == country:
-            return entry[1]
-    return None
+    return all_csv(0, 1, country)
 
 def get_flag_url(input):
     if type(input) != str:
