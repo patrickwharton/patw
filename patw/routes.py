@@ -30,7 +30,9 @@ def index():
 
 @app.context_processor
 def context_processor():
-    charts_list = [['Countries Bar Chart', '/charts/countriesbar'], ['Continents', '/charts/contgantt']]
+    charts_list = [['My Countries Bar Charts', '/charts/countriesbar'], \
+                ["Patrick's Bar Chart", '/patrickschart'], \
+                ['Jupyter Gantt Chart Example', '/jchart']]
     dictionary = dict(loginform = LogInForm(), charts_list=charts_list)
     return dictionary
 
