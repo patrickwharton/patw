@@ -36,7 +36,7 @@
                     <li class="nav-item"><a class="nav-link" href="/createmap">Create Map</a></li>
                     <li class="nav-item"><a class="nav-link" href="/map">My Maps</a></li>
                     <li class="nav-item dropdown dropdown-content" id="chartsdropdown">
-                        <a class="dropdown-toggle dropdown-content nav-item nav-link" href='#' data-toggle="dropdown">Charts</a>
+                        <a class="dropdown-toggle dropdown-content nav-link" href='#' data-toggle="dropdown">Charts</a>
                         <ul class="dropdown-menu dropdown-content">
                           {% for i in range(( charts_list | length ) - 2) %}
                           <li><a class="dropdown-item" href="{{ charts_list[i][1] }}">{{ charts_list[i][0] }}</a></li>

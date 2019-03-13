@@ -14,11 +14,13 @@ nav {
   background-color:#5B2A66;
 }
 nav .navbar-brand {
-    /* size for brand */
     font-size: xx-large;
 }
 .dropdown-content:hover .dropdown-content {
 display: block;
+}
+li.dropdown ul {
+  margin-top: 0px;
 }
 li.nav-link:hover {
   cursor:pointer;
@@ -41,20 +43,15 @@ a.dropdown-item.active {
 }
 
 main .form-control {
-    /* center form controls */
     display: inline-block;
-
-    /* override Bootstrap's 100% width for form controls */
     width: auto;
 }
 
 main {
-    /* scroll horizontally as needed */
     overflow-x: auto;
 }
 
 main img {
-    /* constrain images on small screens */
     max-width: 100%;
 }
 
