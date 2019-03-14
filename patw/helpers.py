@@ -11,7 +11,7 @@ from patw.models import Polar
 from patw.time_spent import time_spent as ts
 from werkzeug.utils import secure_filename
 
-LABEL_LIST = ['Seconds', 'Days', 'Hours', 'Weeks', 'Years']
+LABEL_LIST = ['Seconds', 'Hours', 'Days', 'Weeks', 'Years']
 FLAGS_URL = 'https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/'
 FLAGS_SUFFIX = '.png'
 

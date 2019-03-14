@@ -43,14 +43,14 @@ def continents_pie(current_map=None, username=None):
 
     df = df.groupby(['region']).time_spent.sum().reset_index()
     df['explode'] = 0
-    print(df, file=sys.stderr)
 
     fig1, ax1 = plt.subplots()
     ax1.pie(df['time_spent'], labels=df['region'], autopct='%1.1f%%',\
-                shadow=False, pctdistance=0.85, startangle=0, \
-                explode=df['explode'])
+                shadow=False, pctdistance=0.58, startangle=0, \
+                explode=df['explode'], wedgeprops={"edgecolor":"k",'linewidth': \
+                1.25, 'linestyle': 'solid', 'antialiased': True})
 
-    centre_circle = plt.Circle((0,0),0.70,fc='white')
+    centre_circle = plt.Circle((0,0),0.70,color='black',fc='white',linewidth=1.25)
     fig = plt.gcf()
     fig.gca().add_artist(centre_circle)
 

@@ -7,23 +7,34 @@ body {
 
 * {
 	font-family: 'Galdeano', sans-serif !important;
-
 }
-
+a {
+    outline: none;
+}
+.navbar a:hover, .navbar a:active, .navbar a:focus {
+  background-color: #411e48;
+}
 nav {
   background-color:#5B2A66;
 }
 nav .navbar-brand {
     font-size: xx-large;
+
+}
+nav .navbar-brand:hover {
+  background-color: inherit
 }
 .dropdown-content:hover .dropdown-content {
 display: block;
 }
-li.dropdown ul {
+li.dropdown ul, li.dropdown div {
   margin-top: 0px;
 }
 li.nav-link:hover {
   cursor:pointer;
+}
+.dropdown-toggle::after {
+    display:none;
 }
 .btn-secondary {
   background-color:#5B2A66
@@ -38,7 +49,7 @@ a.dropdown-item.active {
   font-weight: normal;
   color: #333333;
   cursor: pointer;
-  background-color: inherit;
+  background-color: #411e48;
   border-color: transparent;
 }
 
@@ -48,6 +59,7 @@ main .form-control {
 }
 
 main {
+    margin-top: 70px;
     overflow-x: auto;
 }
 
@@ -74,4 +86,7 @@ main img {
   margin-left: auto;
   margin-right: auto;
   display: block;
+}
+footer {
+  margin-bottom:50px;
 }

@@ -32,9 +32,9 @@ var label = {{ label | tojson | safe }}
 
 <script type="text/javascript" src="static/scripts/amcharts.js"></script>
 <br>
-<div class="dropdown">
+<div style="float:right" class="dropdown">
   <button class="btn btn-secondary btn-sm dropdown-toggle" name='labeldropdown' type="button" id="labelMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    {{ label }}
+  Units: {{ label }}
   </button>
   <div class="dropdown-menu" aria-labelledby="labelMenuButton">
     {% for l in label_list %}
