@@ -4,13 +4,13 @@ from patw.forms import RegistrationForm, LogInForm
 from patw.helpers import LABEL_LIST, add_map, allowed_file, err, get_map_data, get_map_list, label_maker, save_file
 from patw.helpers import get_flag_url, get_code, get_country
 from patw.models import User, Polar
-from patw.charts import time_spent_bar, continents_gantt
+from patw.charts import time_spent_bar, continents_pie
 from flask import Markup, jsonify, redirect, render_template, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from validate_email import validate_email
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import sys
 
 db.create_all()
 # TEMPORARY # Creates admin profile and initialises Patrick's Map
@@ -30,7 +30,8 @@ def index():
 
 @app.context_processor
 def context_processor():
-    charts_list = [['My Countries Bar Charts', '/charts/countriesbar'], \
+    charts_list = [['Bar Charts', '/charts/countries_bar'], \
+                ["Continents Pie Chart", '/charts/continents_pie'],\
                 ["Patrick's Bar Chart", '/patrickschart'], \
                 ['Jupyter Gantt Chart Example', '/jchart']]
     dictionary = dict(loginform = LogInForm(), charts_list=charts_list)
@@ -53,10 +54,10 @@ def charts(chart):
 
     if len(map_list) == 1:
         map_list = []
-    if chart == 'countriesbar':
+    if chart == 'countries_bar':
         img = time_spent_bar(current_map=map_name)
-    elif chart == 'contgantt':
-        img = continents_gantt(current_map=map_name)
+    elif chart == 'continents_pie':
+        img = continents_pie(current_map=map_name)
     return render_template("charts.html", current_chart=chart, current_map=map_name, map_list=map_list, img = img)
 
 @app.route("/check", methods=["GET"])
@@ -139,10 +140,8 @@ def login():
         if user and check_password_hash(user.hash, loginform.password.data):
             login_user(user, remember=loginform.remember.data)
             flash(f"Successfully logged in. Welcome back {user.username}!", "success")
-            if request.args.get("next"):
-                return redirect(request.args.get("next"))
-            else:
-                return redirect("/")
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect("/")
         flash("Login attempt failed. Incorrect email address or password", "danger")
 
     return render_template("login.html", loginform=loginform)

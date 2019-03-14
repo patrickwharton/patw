@@ -4,12 +4,15 @@
 {% block title %}Data{% endblock %}
 
 {% block main %}
-<ul>
-  
-{% for entry in data %}
-<li>
-  {{ entry }}
-  </li>
-{% endfor %}
-</ul>
+<table>
+  {% for entry in data %}
+    <tr>
+      <td>{{ entry.user_id }}</td>
+      <td>{{ entry.country_code }}</td>
+      <td>{{ entry.start_time }}</td>
+      <td>{{ entry.end_time }}</td>
+      <td>{{ entry.map_name }}</td>
+    </tr>
+  {% endfor %}
+</table>
 {% endblock %}

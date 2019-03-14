@@ -35,7 +35,7 @@
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item"><a class="nav-link" href="/createmap">Create Map</a></li>
                     <li class="nav-item"><a class="nav-link" href="/map">My Maps</a></li>
-                    <li class="nav-item dropdown dropdown-content" id="chartsdropdown">
+                    <li class="nav-item dropdown dropdown-content">
                         <a class="dropdown-toggle dropdown-content nav-link" href='#' data-toggle="dropdown">Charts</a>
                         <ul class="dropdown-menu dropdown-content">
                           {% for i in range(( charts_list | length ) - 2) %}
@@ -60,7 +60,17 @@
             {% else %}
                 <ul class="navbar-nav mr-auto mt-2">
                     <li class="nav-item"><a class="nav-link" href="/patricksmap">Patrick's Heat Map</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/patrickschart">Patrick's Chart</a></li>
+                    <li class="nav-item dropdown dropdown-content">
+                        <a class="dropdown-toggle dropdown-content nav-link" href='#' data-toggle="dropdown">Charts</a>
+                        <ul class="dropdown-menu dropdown-content">
+                          {% for i in range(( charts_list | length ) - 2) %}
+                          <li><a class="dropdown-item disabled" href="{{ charts_list[i][1] }}">{{ charts_list[i][0] }}</a></li>
+                          {% endfor %}
+                          <div class="dropdown-divider"></div>
+                          <li><a class="dropdown-item" href="{{ charts_list[-2][1] }}">{{ charts_list[-2][0] }}</a></li>
+                          <li><a class="dropdown-item" href="{{ charts_list[-1][1] }}">{{ charts_list[-1][0] }}</a></li>
+                        </ul>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ml-auto mt-2">
                     <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
@@ -86,7 +96,7 @@
       {% block main2 %}{% endblock %}
     </main>
     <footer class="small text-center text-muted">
-      This is barely a website and certainly not pretty, why are you here?
+      This is barely a website, far from pretty, and certainly not optimised - why are you here?
     </footer>
   </body>
 </html>

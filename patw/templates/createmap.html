@@ -4,12 +4,15 @@
 
 {% block main %}
 <p>
-  Upload your polarsteps data here.
+  Upload your <a href="https://www.polarsteps.com/">Polarsteps</a> data here.
 </p>
 <p>
   The file required is the zip file, normally called
   user_data, that you get when you request your data
   from polarsteps.
+  <br>
+  To get this data, click on Options, go to Account settings,
+  and then select the button that says: download a copy of your data.
 </p>
 <form action="/createmap" class="needs-validation" method="post" enctype=multipart/form-data>
   <input name="polardata" type="file" accept=".zip" required>
