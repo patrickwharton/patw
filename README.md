@@ -2,15 +2,23 @@
 
 Things I could've done differently:
 
-I could've used WTForms for easier and maybe better form validation in register.html, but this way meant I had to write some (bad) JavaScript.
+I could've made this an actual README for a start.
 
-Criticisms:
+I could host it somewhere else other than localhost, because that might actually mean people could see it.
+
+I could've used WTForms for easier and maybe better form validation in register.html, but this way meant I had to write some JavaScript.
+
+## Criticisms:
 
 Polarsteps doesn't recognise Kosovo as a country for some stupid reason, so there's not gonna be any Kosovan colouring anytime soon and will instead be added to Serbia - unless I somehow force it or actually get around to implementing lat/long with my own (or just other) country definitions
 
-This website ugly, purple? what the actual fuck were you thinking?
+My personal Polarsteps data is slightly inconsistent with the reality, but that's entirely user error.
 
-TODO
+This website ugly, purple? what on earth were you thinking?
+
+Theres nowhere near enough comments
+
+## TODO
 
 Guest User
 

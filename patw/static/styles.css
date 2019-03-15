@@ -11,9 +11,7 @@ body {
 a {
     outline: none;
 }
-.navbar a:hover, .navbar a:active, .navbar a:focus {
-  background-color: #411e48;
-}
+
 nav {
   background-color:#5B2A66;
 }
@@ -67,6 +65,17 @@ main img {
     max-width: 100%;
 }
 
+body {
+  background: url('acatenango.png')no-repeat center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+main {
+  background-color: white;
+}
+
 #chartdiv {
   width: 100%;
   height: 500px;
@@ -88,5 +97,6 @@ main img {
   display: block;
 }
 footer {
+  color:#ccc;
   margin-bottom:50px;
 }

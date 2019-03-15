@@ -18,6 +18,12 @@ import seaborn as sns
 import sys
 
 def get_single_map_df(username, current_map):
+    '''
+    Reads the database and obtains the map data for the user
+    and map
+
+    Need to update to remove pure SQL query
+    '''
     user_id = User.query.filter_by(username=username).first().user_id
     df = pd.read_sql_query(f'select * from polar where user_id = {user_id} and map_name = "{current_map}"', db.session.bind, parse_dates=['date_created'])
     return df
@@ -85,7 +91,6 @@ def time_spent_bar(current_map=None, username=None):
     # Change codes to name and sort
     df['country'] = df['country_code'].apply(get_country)
     df = df.sort_values(by=['time_spent', 'country'], ascending=[False, True])
-
     sns.set_style('darkgrid')
     sns.set_context("paper")
 
