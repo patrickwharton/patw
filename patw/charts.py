@@ -59,6 +59,9 @@ def continents_pie(current_map=None, username=None):
     centre_circle = plt.Circle((0,0),0.70,color='black',fc='white',linewidth=1.25)
     fig = plt.gcf()
     fig.gca().add_artist(centre_circle)
+    ax1.set_title("Percentage of time spent on each Continent")
+    title = ax1.title
+    title.set_position([.5, 1.05])
 
     ax1.axis('equal')
     plt.tight_layout()
