@@ -82,7 +82,7 @@
         </div>
       </div>
     </nav>
-
+    {% block main2 %}
     <main class="container p-5">
       {% with messages = get_flashed_messages(with_categories = true) %}
         {% if messages %}
@@ -95,9 +95,7 @@
       {% endwith %}
       {% block main %}{% endblock %}
     </main>
-    <main>
-      {% block main2 %}{% endblock %}
-    </main>
+    {% endblock %}
     <footer class="small text-center">
       This is barely a website, far from pretty, and certainly not optimised - why are you here?
     </footer>
