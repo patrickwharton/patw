@@ -144,6 +144,13 @@ def login():
             return redirect(next_page) if next_page else redirect("/")
         flash("Login attempt failed. Incorrect email address or password", "danger")
 
+    elif request.form.get("guestbutton"):
+        user = User.query.filter_by(username='guest').first()
+        login_user(user, remember=False)
+        flash(f"Successfully logged in. Welcome to the Guest Account!", "success")
+        next_page = request.args.get('next')
+        return redirect(next_page) if next_page else redirect("/")
+
     return render_template("login.html", loginform=loginform)
 
 @app.route("/logout")
@@ -249,6 +256,10 @@ def register():
         return err("How did I get here?")
 
     return redirect("/")
+
+@app.route("/reset")
+def reset():
+    return render_template("reset.html")
 
 def errorhandler(e):
     """Handle error"""

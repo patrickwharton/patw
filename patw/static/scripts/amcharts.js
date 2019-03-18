@@ -30,6 +30,22 @@ polygonSeries.heatRules.push({
 polygonSeries.useGeodata = true;
 chart.deltaLongitude = -11;
 
+// Zoom control
+chart.zoomControl = new am4maps.ZoomControl();
+
+var homeButton = new am4core.Button();
+homeButton.events.on("hit", function(){
+  chart.goHome();
+});
+
+homeButton.icon = new am4core.Sprite();
+homeButton.padding(7, 5, 7, 5);
+homeButton.width = 30;
+homeButton.icon.path = "M16,8 L14,8 L14,16 L10,16 L10,10 L6,10 L6,16 L2,16 L2,8 L0,8 L8,0 L16,8 Z M16,8";
+homeButton.marginBottom = 10;
+homeButton.parent = chart.zoomControl;
+homeButton.insertBefore(chart.zoomControl.plusButton);
+
 
 // Set heatmap values for each state
 polygonSeries.data = data;
