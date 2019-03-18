@@ -16,7 +16,7 @@ My personal Polarsteps data is slightly inconsistent with the reality, but that'
 
 This website ugly, purple? what on earth were you thinking?
 
-Theres nowhere near enough comments
+There's nowhere near enough comments...
 
 ## TODO
 

@@ -132,16 +132,27 @@ def get_map_list():
 
 def label_maker(data):
     for entry in data:
-            entry['seconds_label'] = ": {:,} seconds".format(entry['value'])
-            value = int(entry['value'])/3600
-            entry['hours_label'] = ": {:,.0f} hours".format(value)
-            value = value/24
+        entry['seconds_label'] = ": {:,} seconds".format(entry['value'])
+        value = int(entry['value'])/3600
+        entry['hours_label'] = ": {:,.0f} hours".format(value)
+        value = value/24
+        if value < 9.5:
             entry['days_label'] = ": {:,.1f} days".format(value)
-            value = value/7
-            entry['weeks_label'] = ": {:,.1f} weeks".format(value)
-            # https://www.grc.nasa.gov/www/k-12/Numbers/Math/Mathematical_Thinking/calendar_calculations.htm
-            value = int(entry['value'])/31556926
-            entry['years_label'] = ": {:,.2f} years".format(value)
+        else:
+            entry['days_label'] = ": {:,.0f} days".format(round(value))
+        value = value/7
+        entry['weeks_label'] = ": {:,.1f} weeks".format(value)
+        # https://www.grc.nasa.gov/www/k-12/Numbers/Math/Mathematical_Thinking/calendar_calculations.htm
+        value = int(entry['value'])/31556926
+        entry['years_label'] = ": {:,.2f} years".format(value)
+
+    # Added Kosovo
+    XK = {}
+    XK['id'] = 'XK'
+    for i in ['seconds_label', 'hours_label', 'days_label', 'weeks_label', 'years_label']:
+        XK[i] = ': Not currently supported :('
+    data.append(XK)
+
     return data
 
 def save_file(file):
