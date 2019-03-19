@@ -8,7 +8,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = '0a2dbe5f115d5f81eeab2e75c65f98930f7b958a'
-    UPLOAD_FOLDER = basedir + "/static/userdata"
+    UPLOAD_FOLDER = basedir + "/static"
     SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'#os.environ['DATABASE_URL']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEMPLATES_AUTO_RELOAD = True
