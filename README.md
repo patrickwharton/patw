@@ -1,6 +1,13 @@
 # patw
 
-Things I could've done differently:
+# Usage
+
+Some version of this is probably hosted at https://patw.herokuapp.com/
+
+You may need to refresh it a couple times initially because freehostingproblems.jpg
+
+
+## Things I could've done differently:
 
 I could've made this an actual README for a start.
 
