@@ -1,10 +1,10 @@
 # patw
 
-# Usage
+## Usage
 
 Some version of this is probably hosted at https://patw.herokuapp.com/
 
-You may need to refresh it a couple times initially because freehostingproblems.jpg
+You may need to refresh it a couple times initially because freehostingproblems.jpg. Took 17527ms to start up
 
 
 ## Things I could've done differently:
