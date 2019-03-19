@@ -212,8 +212,9 @@ def patricksmap():
 def profile():
     data = get_map_data(current_user.user_id, get_map_list()[0])
     flags = []
-    for country in data:
-        flags.append(get_flag_url(country['id']))
+    if data:
+        for country in data:
+            flags.append(get_flag_url(country['id']))
     return render_template("profile.html", flags=flags)
 
 @app.route("/register", methods=["GET", "POST"])
