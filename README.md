@@ -9,7 +9,7 @@ You may need to refresh it a couple times initially because freehostingproblems.
 
 ## Things I could've done differently:
 
-I could've made this an actual README for a start.
+I still need to change to using PostgreSQL rather than SQLite
 
 I could've made it look pretty, either by spending more time doing CSS (ewww) or (more likely) started with a html template on which somebody else spent more time doing CSS, so it would've started out pretty at least.
 
